@@ -17,7 +17,7 @@ extern "C" {
 #endif
 
 // The list of tokens.
-enum {
+typedef enum {
     // Special tokens
     UNKNOWN,
     EOF,
@@ -25,6 +25,7 @@ enum {
 
     // Literals
     IDENTIFIER, // main
+    NUMBER,     // 12345
     INTEGER,    // 12345
     FLOAT,      // 123.45
     CHARACTER,  // 'a'
@@ -42,7 +43,6 @@ enum {
     BITWISE_XOR,         // ^
     BITWISE_SHIFT_LEFT,  // <<
     BITWISE_SHIFT_RIGHT, // >>
-    BITWISE_AND_NOT,     // &^
 
     ADD_ASSIGNMENT,      // +=
     SUBTRACT_ASSIGNMENT, // -=
@@ -71,12 +71,13 @@ enum {
     NOT_EQUAL,     // !=
     LESS_EQUAL,    // <=
     GREATER_EQUAL, // >=
+    DEFINE,        // :=
+    ELLIPSIS,      // ...
 
     // Delimiters
-    OPEN_PARENTHESIS,    // (
-    OPEN_SQUARE_BRACKET, // [
-    OPEN_CURLY_BRACE,    // {
-
+    OPEN_PARENTHESIS,     // (
+    OPEN_SQUARE_BRACKET,  // [
+    OPEN_CURLY_BRACE,     // {
     CLOSE_PARENTHESIS,    // )
     CLOSE_SQUARE_BRACKET, // ]
     CLOSE_CURLY_BRACE,    // }
@@ -109,7 +110,7 @@ enum {
 
     // Internal
     COUNT
-};
+} Token;
 
 #ifdef __cplusplus
 }
