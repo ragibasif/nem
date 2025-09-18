@@ -15,8 +15,37 @@
 #include <string.h>
 #include <time.h>
 
-void thal_error_message( const char *file, const int line, const char *func,
-                         const char *fmt, ... ) {
+char *NemReadFile( const char *path ) {
+    FILE *file = fopen( path, "rb" );
+    if ( !file ) {
+        N_ERROR( "Could not open file \"%s\".", path );
+        exit( EXIT_FAILURE );
+    }
+
+    if ( !strrchr( path, '.' ) ) {
+        N_ERROR( "Input file must end in '.c'" );
+        exit( EXIT_FAILURE );
+    }
+
+    fseek( file, 0L, SEEK_END );
+    size_t fileSize = ftell( file );
+    rewind( file );
+
+    char *buffer = malloc( fileSize + 1 );
+    N_ALLOC_CHECK( buffer, fileSize + 1 );
+    size_t bytesRead = fread( buffer, sizeof( char ), fileSize, file );
+    if ( bytesRead < fileSize ) {
+        N_ERROR( "Could not read file \"%s\".", path );
+        exit( EXIT_FAILURE );
+    }
+    buffer[bytesRead] = '\0';
+
+    fclose( file );
+    return buffer;
+}
+
+void NemError( const char *file, const int line, const char *func,
+               const char *fmt, ... ) {
     fprintf( stderr, "ERROR " );
     time_t now                       = time( NULL );
     char  *time_str                  = ctime( &now );
@@ -31,10 +60,10 @@ void thal_error_message( const char *file, const int line, const char *func,
     va_end( args );
 }
 
-void thal_alloc_check( void *ptr, size_t size, const char *file, const int line,
-                       const char *func ) {
+void NemAllocCheck( void *ptr, size_t size, const char *file, const int line,
+                    const char *func ) {
     if ( !ptr ) {
-        T_ERROR( "Memory allocation error. Failed to allocate %lu bytes to "
+        N_ERROR( "Memory allocation error. Failed to allocate %lu bytes to "
                  "memory address %p." );
         exit( EXIT_FAILURE );
     }

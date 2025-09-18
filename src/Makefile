@@ -25,11 +25,11 @@ LDFLAGS := -v -lc
 
 BUILD_DIRECTORY := build
 
-EXECUTABLE := thal
+EXECUTABLE := nem
 EXEC_PATH := $(BUILD_DIRECTORY)/$(EXECUTABLE)
 
-SRCS := $(wildcard *.c) $(wildcard */*.c)
-HDRS := $(wildcard *.hpp) $(wildcard */*.h)
+SRCS := $(wildcard *.c) #$(wildcard */*.c)
+HDRS := $(wildcard *.h) #$(wildcard */*.h)
 OBJS := $(patsubst %.c, $(BUILD_DIRECTORY)/%.o, $(SRCS))
 
 .PHONY: all clean help run check debug

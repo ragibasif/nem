@@ -17,100 +17,100 @@ extern "C" {
 #endif
 
 // The list of tokens.
-typedef enum {
+enum TokenType {
     // Special tokens
-    UNKNOWN,
-    EOF,
-    COMMENT,
+    TT_UNKNOWN,
+    TT_EOF,
+    TT_COMMENT,
 
     // Literals
-    IDENTIFIER, // main
-    NUMBER,     // 12345
-    INTEGER,    // 12345
-    FLOAT,      // 123.45
-    CHARACTER,  // 'a'
-    STRING,     // "abc"
+    TT_IDENTIFIER, // main
+    TT_NUMBER,     // 12345
+    TT_INTEGER,    // 12345
+    TT_FLOAT,      // 123.45
+    TT_CHARACTER,  // 'a'
+    TT_STRING,     // "abc"
 
     // Operators
-    ADD,      // +
-    SUBTRACT, // -
-    MULTIPLY, // *
-    DIVIDE,   // /
-    MODULO,   // %
+    TT_ADD,      // +
+    TT_SUBTRACT, // -
+    TT_MULTIPLY, // *
+    TT_DIVIDE,   // /
+    TT_MODULO,   // %
 
-    BITWISE_AND,         // &
-    BITWISE_OR,          // |
-    BITWISE_XOR,         // ^
-    BITWISE_SHIFT_LEFT,  // <<
-    BITWISE_SHIFT_RIGHT, // >>
+    TT_BITWISE_AND,         // &
+    TT_BITWISE_OR,          // |
+    TT_BITWISE_XOR,         // ^
+    TT_BITWISE_SHIFT_LEFT,  // <<
+    TT_BITWISE_SHIFT_RIGHT, // >>
 
-    ADD_ASSIGNMENT,      // +=
-    SUBTRACT_ASSIGNMENT, // -=
-    MULTIPLY_ASSIGNMENT, // *=
-    DIVIDE_ASSIGNMENT,   // /=
-    MODULO_ASSIGNMENT,   // %=
+    TT_ADD_ASSIGNMENT,      // +=
+    TT_SUBTRACT_ASSIGNMENT, // -=
+    TT_MULTIPLY_ASSIGNMENT, // *=
+    TT_DIVIDE_ASSIGNMENT,   // /=
+    TT_MODULO_ASSIGNMENT,   // %=
 
-    BITWISE_AND_ASSIGNMENT,         // &=
-    BITWISE_OR_ASSIGNMENT,          // |=
-    BITWISE_XOR_ASSIGNMENT,         // ^=
-    BITWISE_SHIFT_LEFT_ASSIGNMENT,  // <<=
-    BITWISE_SHIFT_RIGHT_ASSIGNMENT, // >>=
+    TT_BITWISE_AND_ASSIGNMENT,         // &=
+    TT_BITWISE_OR_ASSIGNMENT,          // |=
+    TT_BITWISE_XOR_ASSIGNMENT,         // ^=
+    TT_BITWISE_SHIFT_LEFT_ASSIGNMENT,  // <<=
+    TT_BITWISE_SHIFT_RIGHT_ASSIGNMENT, // >>=
 
-    LOGICAL_AND, // &&
-    LOGICAL_OR,  // ||
-    ARROW,       // ->
-    INCREMENT,   // ++
-    DECREMENT,   // --
+    TT_LOGICAL_AND, // &&
+    TT_LOGICAL_OR,  // ||
+    TT_ARROW,       // ->
+    TT_INCREMENT,   // ++
+    TT_DECREMENT,   // --
 
-    EQUAL,      // ==
-    LESS,       // <
-    GREATER,    // >
-    ASSIGNMENT, // =
-    NOT,        // !
+    TT_EQUAL,      // ==
+    TT_LESS,       // <
+    TT_GREATER,    // >
+    TT_ASSIGNMENT, // =
+    TT_NOT,        // !
 
-    NOT_EQUAL,     // !=
-    LESS_EQUAL,    // <=
-    GREATER_EQUAL, // >=
-    DEFINE,        // :=
-    ELLIPSIS,      // ...
+    TT_NOT_EQUAL,     // !=
+    TT_LESS_EQUAL,    // <=
+    TT_GREATER_EQUAL, // >=
+    TT_DEFINE,        // :=
+    TT_ELLIPSIS,      // ...
 
     // Delimiters
-    OPEN_PARENTHESIS,     // (
-    OPEN_SQUARE_BRACKET,  // [
-    OPEN_CURLY_BRACE,     // {
-    CLOSE_PARENTHESIS,    // )
-    CLOSE_SQUARE_BRACKET, // ]
-    CLOSE_CURLY_BRACE,    // }
+    TT_OPEN_PARENTHESIS,     // (
+    TT_OPEN_SQUARE_BRACKET,  // [
+    TT_OPEN_CURLY_BRACE,     // {
+    TT_CLOSE_PARENTHESIS,    // )
+    TT_CLOSE_SQUARE_BRACKET, // ]
+    TT_CLOSE_CURLY_BRACE,    // }
 
-    COMMA,     // ,
-    PERIOD,    // .
-    SEMICOLON, // ;
-    COLON,     // :
+    TT_COMMA,     // ,
+    TT_PERIOD,    // .
+    TT_SEMICOLON, // ;
+    TT_COLON,     // :
 
     // Keywords
-    BREAK,
-    CASE,
-    CONST,
-    CONTINUE,
+    TT_BREAK,
+    TT_CASE,
+    TT_CONST,
+    TT_CONTINUE,
 
-    DEFAULT,
-    DEFER,
-    ELSE,
-    FOR,
+    TT_DEFAULT,
+    TT_DEFER,
+    TT_ELSE,
+    TT_FOR,
 
-    FUNCTION,
-    GOTO,
-    IF,
-    IMPORT,
+    TT_FUNCTION,
+    TT_GOTO,
+    TT_IF,
+    TT_IMPORT,
 
-    RETURN,
+    TT_RETURN,
 
-    SWITCH,
-    VARIABLE,
+    TT_SWITCH,
+    TT_VARIABLE,
 
     // Internal
-    COUNT
-} Token;
+    TT_COUNT
+};
 
 #ifdef __cplusplus
 }

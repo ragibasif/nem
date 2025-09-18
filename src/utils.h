@@ -19,15 +19,16 @@ extern "C" {
 #include <stdarg.h>
 #include <stdio.h>
 
-extern void thal_error_message( const char *file, const int line,
-                                const char *func, const char *fmt, ... );
-extern void thal_alloc_check( void *ptr, size_t size, const char *file,
-                              const int line, const char *func );
+extern char *NemReadFile( const char *path );
+extern void  NemError( const char *file, const int line, const char *func,
+                       const char *fmt, ... );
+extern void  NemAllocCheck( void *ptr, size_t size, const char *file,
+                            const int line, const char *func );
 
-#define T_ERROR( fmt, ... )                                                    \
-    thal_error_message( __FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__ )
-#define T_ALLOC_CHECK( ptr, size )                                             \
-    thal_alloc_check( ptr, size, __FILE__, __LINE__, __func__ )
+#define N_ERROR( fmt, ... )                                                    \
+    NemError( __FILE__, __LINE__, __func__, fmt, ##__VA_ARGS__ )
+#define N_ALLOC_CHECK( ptr, size )                                             \
+    NemAllocCheck( ptr, size, __FILE__, __LINE__, __func__ )
 
 #ifdef __cplusplus
 }

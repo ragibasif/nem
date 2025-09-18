@@ -15,41 +15,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void         repl();
-void         runFile( char *file );
-static char *readFile( const char *path );
+#define DEFAULT_TEST_FILE "./test_input/input.c"
 
-static char *readFile( const char *path ) {
-    FILE *file = fopen( path, "rb" );
-    if ( !file ) {
-        T_ERROR( "Could not open file \"%s\".", path );
-        exit( EXIT_FAILURE );
-    }
+static void run( char *file );
 
-    fseek( file, 0L, SEEK_END );
-    size_t fileSize = ftell( file );
-    rewind( file );
-
-    char *buffer = malloc( fileSize + 1 );
-    T_ALLOC_CHECK( buffer, fileSize + 1 );
-    size_t bytesRead = fread( buffer, sizeof( char ), fileSize, file );
-    if ( bytesRead < fileSize ) {
-        T_ERROR( "Could not read file \"%s\".", path );
-        exit( EXIT_FAILURE );
-    }
-    buffer[bytesRead] = '\0';
-
-    fclose( file );
-    return buffer;
+static void run( char *file ) {
+    char *buffer = NemReadFile( file );
+    printf( "%s", buffer );
 }
 
 int main( int argc, char **argv ) {
-    printf( "thal\n" );
-    readFile( "input_c" );
-    // if ( argc == 1 ) {
-    //     puts( "repl();" );
+    printf( "nem\n" );
+
+    run( DEFAULT_TEST_FILE );
+
+    // if ( argc != 2 ) {
+    //     run( DEFAULT_TEST_FILE );
     // } else if ( argc == 2 ) {
-    //     puts( "runFile(argv[1]);" );
+    //     run( argv[1] );
     // } else {
     //     fprintf( stderr, "Usage: thal [path]\n" );
     // }
