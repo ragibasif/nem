@@ -10,24 +10,30 @@
  *
  */
 
-#include "utils.h"
+#include "dbg.h"
+#include "util.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
 #define DEFAULT_TEST_FILE "./test_input/input.c"
+#define NEM               "nem"
 
 static void run( char *file );
 
 static void run( char *file ) {
-    char *buffer = NemReadFile( file );
+    char *buffer = Read( file );
     printf( "%s", buffer );
 }
 
 int main( int argc, char **argv ) {
-    printf( "nem\n" );
+    Log( __FILE__, __LINE__, __func__, "Starting %s:", NEM );
+
+    dbg( DEFAULT_TEST_FILE );
 
     run( DEFAULT_TEST_FILE );
+
+    Panic( __FILE__, __LINE__, __func__, "Panic!" );
 
     // if ( argc != 2 ) {
     //     run( DEFAULT_TEST_FILE );

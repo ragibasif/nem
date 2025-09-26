@@ -12,6 +12,8 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
+#include <stdlib.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -26,17 +28,20 @@ enum TokenType {
     // Literals
     TT_IDENTIFIER, // main
     TT_NUMBER,     // 12345
+    TT_DIGIT,      // [0-9]
     TT_INTEGER,    // 12345
-    TT_FLOAT,      // 123.45
-    TT_CHARACTER,  // 'a'
-    TT_STRING,     // "abc"
+    TT_DOULBE,
+    TT_FLOAT,     // 123.45
+    TT_CHARACTER, // 'a'
+    TT_STRING,    // "abc"
 
     // Operators
-    TT_ADD,      // +
-    TT_SUBTRACT, // -
-    TT_MULTIPLY, // *
-    TT_DIVIDE,   // /
-    TT_MODULO,   // %
+    TT_PLUS,   // +
+    TT_MINUS,  // -
+    TT_STAR,   // *
+    TT_SLASH,  // /
+    TT_MODULO, // %
+    TT_INVERT, // ~
 
     TT_BITWISE_AND,         // &
     TT_BITWISE_OR,          // |
@@ -44,11 +49,11 @@ enum TokenType {
     TT_BITWISE_SHIFT_LEFT,  // <<
     TT_BITWISE_SHIFT_RIGHT, // >>
 
-    TT_ADD_ASSIGNMENT,      // +=
-    TT_SUBTRACT_ASSIGNMENT, // -=
-    TT_MULTIPLY_ASSIGNMENT, // *=
-    TT_DIVIDE_ASSIGNMENT,   // /=
-    TT_MODULO_ASSIGNMENT,   // %=
+    TT_PLUS_ASSIGNMENT,   // +=
+    TT_MINUS_ASSIGNMENT,  // -=
+    TT_STAR_ASSIGNMENT,   // *=
+    TT_SLASH_ASSIGNMENT,  // /=
+    TT_MODULO_ASSIGNMENT, // %=
 
     TT_BITWISE_AND_ASSIGNMENT,         // &=
     TT_BITWISE_OR_ASSIGNMENT,          // |=
@@ -67,6 +72,7 @@ enum TokenType {
     TT_GREATER,    // >
     TT_ASSIGNMENT, // =
     TT_NOT,        // !
+    TT_QUESTION,   // ?
 
     TT_NOT_EQUAL,     // !=
     TT_LESS_EQUAL,    // <=
@@ -88,15 +94,36 @@ enum TokenType {
     TT_COLON,     // :
 
     // Keywords
+    TT_AUTO,
     TT_BREAK,
     TT_CASE,
     TT_CONST,
     TT_CONTINUE,
+    TT_PRINT,
+    TT_TRUE,
+    TT_FALSE,
 
     TT_DEFAULT,
-    TT_DEFER,
+    TT_DO,
+    // TT_DEFER,
     TT_ELSE,
     TT_FOR,
+    TT_ENUM,
+    TT_EXTERN,
+    TT_INT,
+    TT_CHAR,
+    TT_LONG,
+    TT_REGISTER,
+    TT_SHORT,
+    TT_SIGNED,
+    TT_SIZEOF,
+    TT_STATIC,
+    TT_STRUCT,
+    TT_TYPEDEF,
+    TT_UNION,
+    TT_UNSIGNED,
+    TT_VOLATILE,
+    TT_WHILE,
 
     TT_FUNCTION,
     TT_GOTO,
@@ -106,10 +133,30 @@ enum TokenType {
     TT_RETURN,
 
     TT_SWITCH,
-    TT_VARIABLE,
+    TT_VARIABLE, // [A-Za-z_]+ [A-Za-z0-9_]*
+    TT_TYPE,
+
+    // built-in data types
+    TT_VOID,
+    TT_BOOL,
+    TT_INT8,   // char
+    TT_UINT8,  // unsigned char
+    TT_INT16,  // short
+    TT_UINT16, // unsigned short
+    TT_INT32,  // int
+    TT_UINT32, // unsigned int
+    TT_INT64,  // long long
+    TT_UINT64, // unsigned long long
+    TT_FLT32,  // float
+    TT_FLT64,  // double
 
     // Internal
     TT_COUNT
+};
+
+struct Token {
+    enum TokenType type;
+    char          *literal;
 };
 
 #ifdef __cplusplus
