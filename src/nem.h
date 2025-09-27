@@ -1,5 +1,5 @@
 /*
- * File: opcode.h
+ * File: nem.h
  * Author: Ragib Asif
  * Email: ragibasif@tuta.io
  * GitHub: https://github.com/ragibasif
@@ -9,26 +9,21 @@
  * Version 1.0.0
  */
 
-#ifndef OPCODE_H
-#define OPCODE_H
+#ifndef NEM_H
+#define NEM_H
+
+#include "dbg.h"
+#include "lexer.h"
+#include "opcode.h"
+#include "token.h"
+#include "util.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// The list of tokens.
-enum NemOpCodeType {
-    // internal
-    NOCT_COUNT,
-};
-
-struct NemOpCode {
-    enum NemOpCodeType type;
-    char              *name;
-};
-
 #ifdef __cplusplus
 }
 #endif
 
-#endif // OPCODE_H
+#endif // NEM_H

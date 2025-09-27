@@ -19,145 +19,150 @@ extern "C" {
 #endif
 
 // The list of tokens.
-enum TokenType {
+enum NemTokenType {
     // Special tokens
-    TT_UNKNOWN,
-    TT_EOF,
-    TT_COMMENT,
+    NTT_UNKNOWN,
+    NTT_EOF,
+    NTT_COMMENT,
 
     // Literals
-    TT_IDENTIFIER, // main
-    TT_NUMBER,     // 12345
-    TT_DIGIT,      // [0-9]
-    TT_INTEGER,    // 12345
-    TT_DOULBE,
-    TT_FLOAT,     // 123.45
-    TT_CHARACTER, // 'a'
-    TT_STRING,    // "abc"
+    NTT_IDENTIFIER, // main
+    NTT_NUMBER,     // 12345
+    NTT_DIGIT,      // [0-9]
+    NTT_INTEGER,    // 12345
+    NTT_DOULBE,
+    NTT_FLOAT,     // 123.45
+    NTT_CHARACTER, // 'a'
+    NTT_STRING,    // "abc"
 
     // Operators
-    TT_PLUS,   // +
-    TT_MINUS,  // -
-    TT_STAR,   // *
-    TT_SLASH,  // /
-    TT_MODULO, // %
-    TT_INVERT, // ~
+    NTT_PLUS,   // +
+    NTT_MINUS,  // -
+    NTT_STAR,   // *
+    NTT_SLASH,  // /
+    NTT_MODULO, // %
+    NTT_INVERT, // ~
 
-    TT_BITWISE_AND,         // &
-    TT_BITWISE_OR,          // |
-    TT_BITWISE_XOR,         // ^
-    TT_BITWISE_SHIFT_LEFT,  // <<
-    TT_BITWISE_SHIFT_RIGHT, // >>
+    NTT_BITWISE_AND,         // &
+    NTT_BITWISE_OR,          // |
+    NTT_BITWISE_XOR,         // ^
+    NTT_BITWISE_SHIFT_LEFT,  // <<
+    NTT_BITWISE_SHIFT_RIGHT, // >>
 
-    TT_PLUS_ASSIGNMENT,   // +=
-    TT_MINUS_ASSIGNMENT,  // -=
-    TT_STAR_ASSIGNMENT,   // *=
-    TT_SLASH_ASSIGNMENT,  // /=
-    TT_MODULO_ASSIGNMENT, // %=
+    NTT_PLUS_ASSIGNMENT,   // +=
+    NTT_MINUS_ASSIGNMENT,  // -=
+    NTT_STAR_ASSIGNMENT,   // *=
+    NTT_SLASH_ASSIGNMENT,  // /=
+    NTT_MODULO_ASSIGNMENT, // %=
 
-    TT_BITWISE_AND_ASSIGNMENT,         // &=
-    TT_BITWISE_OR_ASSIGNMENT,          // |=
-    TT_BITWISE_XOR_ASSIGNMENT,         // ^=
-    TT_BITWISE_SHIFT_LEFT_ASSIGNMENT,  // <<=
-    TT_BITWISE_SHIFT_RIGHT_ASSIGNMENT, // >>=
+    NTT_BITWISE_AND_ASSIGNMENT,         // &=
+    NTT_BITWISE_OR_ASSIGNMENT,          // |=
+    NTT_BITWISE_XOR_ASSIGNMENT,         // ^=
+    NTT_BITWISE_SHIFT_LEFT_ASSIGNMENT,  // <<=
+    NTT_BITWISE_SHIFT_RIGHT_ASSIGNMENT, // >>=
 
-    TT_LOGICAL_AND, // &&
-    TT_LOGICAL_OR,  // ||
-    TT_ARROW,       // ->
-    TT_INCREMENT,   // ++
-    TT_DECREMENT,   // --
+    NTT_LOGICAL_AND, // &&
+    NTT_LOGICAL_OR,  // ||
+    NTT_ARROW,       // ->
+    NTT_INCREMENT,   // ++
+    NTT_DECREMENT,   // --
 
-    TT_EQUAL,      // ==
-    TT_LESS,       // <
-    TT_GREATER,    // >
-    TT_ASSIGNMENT, // =
-    TT_NOT,        // !
-    TT_QUESTION,   // ?
+    NTT_EQUAL,      // ==
+    NTT_LESS,       // <
+    NTT_GREATER,    // >
+    NTT_ASSIGNMENT, // =
+    NTT_NOT,        // !
+    NTT_QUESTION,   // ?
 
-    TT_NOT_EQUAL,     // !=
-    TT_LESS_EQUAL,    // <=
-    TT_GREATER_EQUAL, // >=
-    TT_DEFINE,        // :=
-    TT_ELLIPSIS,      // ...
+    NTT_NOT_EQUAL,     // !=
+    NTT_LESS_EQUAL,    // <=
+    NTT_GREATER_EQUAL, // >=
+    NTT_DEFINE,        // :=
+    NTT_ELLIPSIS,      // ...
 
     // Delimiters
-    TT_OPEN_PARENTHESIS,     // (
-    TT_OPEN_SQUARE_BRACKET,  // [
-    TT_OPEN_CURLY_BRACE,     // {
-    TT_CLOSE_PARENTHESIS,    // )
-    TT_CLOSE_SQUARE_BRACKET, // ]
-    TT_CLOSE_CURLY_BRACE,    // }
+    NTT_OPEN_PARENTHESIS,     // (
+    NTT_OPEN_SQUARE_BRACKET,  // [
+    NTT_OPEN_CURLY_BRACE,     // {
+    NTT_CLOSE_PARENTHESIS,    // )
+    NTT_CLOSE_SQUARE_BRACKET, // ]
+    NTT_CLOSE_CURLY_BRACE,    // }
 
-    TT_COMMA,     // ,
-    TT_PERIOD,    // .
-    TT_SEMICOLON, // ;
-    TT_COLON,     // :
+    NTT_COMMA,     // ,
+    NTT_PERIOD,    // .
+    NTT_SEMICOLON, // ;
+    NTT_COLON,     // :
 
     // Keywords
-    TT_AUTO,
-    TT_BREAK,
-    TT_CASE,
-    TT_CONST,
-    TT_CONTINUE,
-    TT_PRINT,
-    TT_TRUE,
-    TT_FALSE,
+    NTT_AUTO,
+    NTT_BREAK,
+    NTT_CASE,
+    NTT_CONST,
+    NTT_CONTINUE,
+    NTT_PRINT,
+    NTT_TRUE,
+    NTT_FALSE,
 
-    TT_DEFAULT,
-    TT_DO,
-    // TT_DEFER,
-    TT_ELSE,
-    TT_FOR,
-    TT_ENUM,
-    TT_EXTERN,
-    TT_INT,
-    TT_CHAR,
-    TT_LONG,
-    TT_REGISTER,
-    TT_SHORT,
-    TT_SIGNED,
-    TT_SIZEOF,
-    TT_STATIC,
-    TT_STRUCT,
-    TT_TYPEDEF,
-    TT_UNION,
-    TT_UNSIGNED,
-    TT_VOLATILE,
-    TT_WHILE,
+    NTT_DEFAULT,
+    NTT_DO,
+    // NTT_DEFER,
+    NTT_ELSE,
+    NTT_FOR,
+    NTT_ENUM,
+    NTT_EXTERN,
+    NTT_INT,
+    NTT_CHAR,
+    NTT_LONG,
+    NTT_REGISTER,
+    NTT_SHORT,
+    NTT_SIGNED,
+    NTT_SIZEOF,
+    NTT_STATIC,
+    NTT_STRUCT,
+    NTT_TYPEDEF,
+    NTT_UNION,
+    NTT_UNSIGNED,
+    NTT_VOLATILE,
+    NTT_WHILE,
 
-    TT_FUNCTION,
-    TT_GOTO,
-    TT_IF,
-    TT_IMPORT,
+    NTT_FUNCTION,
+    NTT_GOTO,
+    NTT_IF,
+    NTT_IMPORT,
 
-    TT_RETURN,
+    NTT_RETURN,
 
-    TT_SWITCH,
-    TT_VARIABLE, // [A-Za-z_]+ [A-Za-z0-9_]*
-    TT_TYPE,
+    NTT_SWITCH,
+    NTT_VARIABLE, // [A-Za-z_]+ [A-Za-z0-9_]*
+    NTT_TYPE,
 
     // built-in data types
-    TT_VOID,
-    TT_BOOL,
-    TT_INT8,   // char
-    TT_UINT8,  // unsigned char
-    TT_INT16,  // short
-    TT_UINT16, // unsigned short
-    TT_INT32,  // int
-    TT_UINT32, // unsigned int
-    TT_INT64,  // long long
-    TT_UINT64, // unsigned long long
-    TT_FLT32,  // float
-    TT_FLT64,  // double
+    NTT_VOID,
+    NTT_BOOL,
+    NTT_INT8,   // char
+    NTT_UINT8,  // unsigned char
+    NTT_INT16,  // short
+    NTT_UINT16, // unsigned short
+    NTT_INT32,  // int
+    NTT_UINT32, // unsigned int
+    NTT_INT64,  // long long
+    NTT_UINT64, // unsigned long long
+    NTT_FLT32,  // float
+    NTT_FLT64,  // double
 
     // Internal
-    TT_COUNT
+    NTT_COUNT
 };
 
-struct Token {
-    enum TokenType type;
-    char          *literal;
+struct NemToken {
+    enum NemTokenType type;
+    char             *name;
+    char             *literal;
 };
+
+extern void nem_token_create( struct NemToken *nem_token, char *literal );
+extern void nem_token_print( struct NemToken *nem_token );
+extern void nem_token_destroy( struct NemToken *nem_token );
 
 #ifdef __cplusplus
 }

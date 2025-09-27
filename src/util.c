@@ -17,8 +17,8 @@
 #include <string.h>
 #include <time.h>
 
-void Panic( const char *file, const int line, const char *func, const char *fmt,
-            ... ) {
+void nem_panic( const char *file, const int line, const char *func,
+                const char *fmt, ... ) {
     fprintf( stderr, "PANIC " );
     time_t now                       = time( NULL );
     char  *time_str                  = ctime( &now );
@@ -34,8 +34,8 @@ void Panic( const char *file, const int line, const char *func, const char *fmt,
     exit( EXIT_FAILURE );
 }
 
-void Error( const char *file, const int line, const char *func, const char *fmt,
-            ... ) {
+void nem_error( const char *file, const int line, const char *func,
+                const char *fmt, ... ) {
     fprintf( stderr, "ERROR " );
     time_t now                       = time( NULL );
     char  *time_str                  = ctime( &now );
@@ -50,8 +50,8 @@ void Error( const char *file, const int line, const char *func, const char *fmt,
     va_end( args );
 }
 
-void Log( const char *file, const int line, const char *func, const char *fmt,
-          ... ) {
+void nem_log( const char *file, const int line, const char *func,
+              const char *fmt, ... ) {
     fprintf( stderr, "LOG " );
     time_t now                       = time( NULL );
     char  *time_str                  = ctime( &now );
@@ -66,12 +66,12 @@ void Log( const char *file, const int line, const char *func, const char *fmt,
     va_end( args );
 }
 
-void AllocCheck( void *ptr, size_t size, const char *file, const int line,
-                 const char *func ) {
+void nem_alloc_check( void *ptr, size_t size, const char *file, const int line,
+                      const char *func ) {
     if ( !ptr ) {
-        Panic( __FILE__, __LINE__, __func__,
-               "Memory allocation error. Failed to allocate %lu bytes to "
-               "memory address %p." );
+        nem_panic( __FILE__, __LINE__, __func__,
+                   "Memory allocation error. Failed to allocate %lu bytes to "
+                   "memory address %p." );
     }
 }
 
@@ -84,28 +84,30 @@ void AllocCheck( void *ptr, size_t size, const char *file, const int line,
 // w+ - open file in read mode and write mode,
 // a+ - open file in append mode
 
-char *Read( const char *path ) {
+char *nem_read_file( const char *path ) {
     FILE *file = fopen( path, "rb" );
     if ( !file ) {
-        Panic( __FILE__, __LINE__, __func__, "Could not open file \"%s\".",
-               path );
+        nem_panic( __FILE__, __LINE__, __func__, "Could not open file \"%s\".",
+                   path );
     }
 
     if ( !strrchr( path, '.' ) ) {
-        Panic( __FILE__, __LINE__, __func__, "Input file must end in '.c'" );
+        nem_panic( __FILE__, __LINE__, __func__,
+                   "Input file must end in '.c'" );
     }
 
     fseek( file, 0L, SEEK_END );
     size_t fileSize = ftell( file );
     rewind( file );
 
+    // Important: remember to free this buffer
     char *buffer = malloc( fileSize + 1 );
-    AllocCheck( buffer, fileSize + 1, __FILE__, __LINE__, __func__ );
+    nem_alloc_check( buffer, fileSize + 1, __FILE__, __LINE__, __func__ );
 
     size_t bytesRead = fread( buffer, sizeof( char ), fileSize, file );
     if ( bytesRead < fileSize ) {
-        Panic( __FILE__, __LINE__, __func__, "Could not read file \"%s\".",
-               path );
+        nem_panic( __FILE__, __LINE__, __func__, "Could not read file \"%s\".",
+                   path );
     }
     buffer[bytesRead] = '\0';
 
@@ -113,5 +115,5 @@ char *Read( const char *path ) {
     return buffer;
 }
 
-void Write( const char *path, const char *buffer ) {}
-void Append( const char *path, const char *buffer ) {}
+void nem_write_file( const char *path, const char *buffer ) {}
+void nem_append_file( const char *path, const char *buffer ) {}

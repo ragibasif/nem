@@ -19,24 +19,24 @@ extern "C" {
 #endif
 
 // File I/O
-extern char *Read( const char *path );
-extern void  Write( const char *path, const char *buffer );
-extern void  Append( const char *path, const char *buffer );
+extern char *nem_read_file( const char *path );
+extern void  nem_write_file( const char *path, const char *buffer );
+extern void  nem_append_file( const char *path, const char *buffer );
 
 // prints error message
-extern void Error( const char *file, const int line, const char *func,
-                   const char *fmt, ... );
+extern void nem_error( const char *file, const int line, const char *func,
+                       const char *fmt, ... );
 
 // prints error message and exits
-extern void Panic( const char *file, const int line, const char *func,
-                   const char *fmt, ... );
+extern void nem_panic( const char *file, const int line, const char *func,
+                       const char *fmt, ... );
 
-extern void Log( const char *file, const int line, const char *func,
-                 const char *fmt, ... );
+extern void nem_log( const char *file, const int line, const char *func,
+                     const char *fmt, ... );
 
 // check for successful dynamic memory allocation
-extern void AllocCheck( void *ptr, size_t size, const char *file,
-                        const int line, const char *func );
+extern void nem_alloc_check( void *ptr, size_t size, const char *file,
+                             const int line, const char *func );
 
 #ifdef __cplusplus
 }

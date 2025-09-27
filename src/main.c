@@ -11,37 +11,40 @@
  */
 
 #include "dbg.h"
+#include "lexer.h"
 #include "util.h"
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#define DEFAULT_TEST_FILE "./test_input/input.c"
+#define DEFAULT_TEST_FILE "../tests/test_00.c"
 #define NEM               "nem"
 
-static void run( char *file );
+static void nem_run( char *file );
 
-static void run( char *file ) {
-    char *buffer = Read( file );
-    printf( "%s", buffer );
+static void nem_run( char *file ) {
+    // Important: remember to free this buffer
+    char            *buffer    = nem_read_file( file );
+    size_t           buf_len   = strlen( buffer );
+    struct NemLexer *nem_lexer = nem_lexer_create( buffer );
+    assert( buf_len == nem_lexer->buffer_size );
+    assert( strcmp( buffer, nem_lexer->buffer ) == 0 );
+
+    nem_lexer_tokenize( &nem_lexer );
+
+    nem_lexer_destroy( &nem_lexer );
+    free( buffer );
+    buffer = NULL;
 }
 
 int main( int argc, char **argv ) {
-    Log( __FILE__, __LINE__, __func__, "Starting %s:", NEM );
+    nem_log( __FILE__, __LINE__, __func__, "Starting %s:", NEM );
 
     dbg( DEFAULT_TEST_FILE );
 
-    run( DEFAULT_TEST_FILE );
-
-    Panic( __FILE__, __LINE__, __func__, "Panic!" );
-
-    // if ( argc != 2 ) {
-    //     run( DEFAULT_TEST_FILE );
-    // } else if ( argc == 2 ) {
-    //     run( argv[1] );
-    // } else {
-    //     fprintf( stderr, "Usage: thal [path]\n" );
-    // }
+    nem_run( DEFAULT_TEST_FILE );
 
     return EXIT_SUCCESS;
 }
