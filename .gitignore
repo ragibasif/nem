@@ -1,35 +1,289 @@
-# If you prefer the allow list template instead of the deny list, see community template:
-# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
-#
-# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
+# Compiled Object files
+*.o
+*.obj
+*.ko
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
 *.so
+*.so.*
 *.dylib
+*.dll
 
-# Test binary, built with `go test -c`
-*.test
+# Compiled Static libraries
+*.a
+*.lib
+*.la
+*.lo
 
-# Code coverage profiles and other test artifacts
+# Executables
+*.exe
 *.out
-coverage.*
-*.coverprofile
-profile.cov
+*.app
+*.i*86
+*.x86_64
+*.hex
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
+# Build directories
+build/
+bin/
+obj/
+dist/
+target/
 
-# Go workspace file
-go.work
-go.work.sum
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
 
-# env file
+# Dependency files
+*.d
+
+# Assembly files
+*.s
+*.S
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Core dumps
+core
+core.*
+*.core
+vgcore.*
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+
+# Autotools
+/autom4te.cache
+/aclocal.m4
+/compile
+/configure
+/depcomp
+/install-sh
+/missing
+/stamp-h1
+*.m4
+config.h
+config.h.in
+config.log
+config.status
+.deps/
+.dirstamp
+Makefile
+Makefile.in
+/libtool
+/ltmain.sh
+
+# pkg-config
+*.pc
+
+# Editor and IDE files
+# Vim
+*.swp
+*.swo
+*~
+.*.sw?
+Session.vim
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# VS Code
+.vscode/
+*.code-workspace
+.history/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+
+# CLion / JetBrains
+.idea/
+cmake-build-*/
+*.iml
+*.iws
+.idea_modules/
+
+# Eclipse
+.cproject
+.project
+.settings/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Atom
+.atom/
+
+# Testing and Coverage
+*.gcno
+*.gcda
+*.gcov
+coverage/
+*.coverage
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.pytest_cache/
+*.test
+test_results/
+lcov.info
+coverage.info
+
+# Valgrind
+*.valgrind
+vgcore.*
+massif.out.*
+callgrind.out.*
+
+# Profiling
+gmon.out
+*.prof
+perf.data
+perf.data.old
+
+# Documentation
+docs/html/
+docs/latex/
+docs/man/
+docs/_build/
+*.pdf
+*.aux
+*.log
+*.toc
+*.idx
+*.ilg
+*.ind
+
+# OS specific files
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Linux
+*~
+.directory
+.Trash-*
+.nfs*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+*.tmp
+*.temp
+*~
+
+# Package files
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.7z
+*.rar
+*.deb
+*.rpm
+
+# Log files
+*.log
+logs/
+*.log.*
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Generated version files
+version.h
+version.c
+
+# Tags and ctags
+tags
+TAGS
+.tags
+.TAGS
+gtags.files
+GPATH
+GRTAGS
+GTAGS
+
+# Clang
+.clangd/
+.cache/
+compile_flags.txt
+
+# ASan/MSan/TSan
+*.asan
+*.msan
+*.tsan
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.swp
+
+# Environment and local config
 .env
+.env.local
+local.conf
+local_config.h
 
-# Editor/IDE
-# .idea/
-# .vscode/
+# Custom build artifacts (adjust as needed)
+*.generated.c
+*.generated.hthal
 
-thal
 extras

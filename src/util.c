@@ -69,9 +69,10 @@ void nem_log( const char *file, const int line, const char *func,
 void nem_alloc_check( void *ptr, size_t size, const char *file, const int line,
                       const char *func ) {
     if ( !ptr ) {
-        nem_panic( __FILE__, __LINE__, __func__,
+        nem_panic( file, line, func,
                    "Memory allocation error. Failed to allocate %lu bytes to "
-                   "memory address %p." );
+                   "memory address %p.",
+                   size, (void *)ptr );
     }
 }
 
@@ -115,5 +116,5 @@ char *nem_read_file( const char *path ) {
     return buffer;
 }
 
-void nem_write_file( const char *path, const char *buffer ) {}
-void nem_append_file( const char *path, const char *buffer ) {}
+// void nem_write_file( const char *path, const char *buffer ) {}
+// void nem_append_file( const char *path, const char *buffer ) {}

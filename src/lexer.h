@@ -18,7 +18,7 @@
 extern "C" {
 #endif
 
-struct NemLexer {
+struct Lexer {
     char  *buffer;      // input buffer
     size_t buffer_size; // size of the input
     char   c;           // current character under examination
@@ -28,9 +28,9 @@ struct NemLexer {
     size_t offset;      // current offset (starts at 0)
 };
 
-extern struct NemLexer *nem_lexer_create( const char *buffer );
-extern void             nem_lexer_destroy( struct NemLexer **nem_lexer );
-extern void             nem_lexer_tokenize( struct NemLexer **nem_lexer );
+extern struct Lexer *lexer_create( const char *buffer );
+extern void          lexer_destroy( struct Lexer **lexer );
+extern void          lexer_tokenize( struct Lexer **lexer );
 
 #ifdef __cplusplus
 }
