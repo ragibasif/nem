@@ -9,18 +9,22 @@
  * Version 1.0.0
  */
 
-#include "lexer.h"
-
 #include "dbg.h"
+#include "nem.h"
 #include "util.h"
 
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
-struct Lexer *lexer_create( const char *buffer ) {
-    struct Lexer *lexer = malloc( sizeof *lexer );
-    nem_alloc_check( lexer, sizeof *lexer, __FILE__, __LINE__, __func__ );
+#define ISSPACE( X ) isspace( (unsigned char)( X ) )
+#define ISDIGIT( X ) isdigit( (unsigned char)( X ) )
+#define ISALNUM( X ) isalnum( (unsigned char)( X ) )
+#define ISALPHA( X ) isalpha( (unsigned char)( X ) )
+#define ISUPPER( X ) isupper( (unsigned char)( X ) )
+#define ISLOWER( X ) islower( (unsigned char)( X ) )
+
+void nem_lexer_create( struct NemLexer *lexer, const char *buffer ) {
     lexer->buffer_size = strlen( buffer );
     lexer->buffer = malloc( sizeof *lexer->buffer * lexer->buffer_size + 1 );
     nem_alloc_check( lexer->buffer,
@@ -33,26 +37,23 @@ struct Lexer *lexer_create( const char *buffer ) {
     lexer->column                     = 1;
     lexer->offset                     = 0;
     lexer->c                          = '\0';
-    return lexer;
 }
 
-void lexer_destroy( struct Lexer **lexer ) {
-    assert( lexer != NULL && *lexer != NULL );
+void nem_lexer_destroy( struct NemLexer *lexer ) {
+    assert( lexer != NULL );
     // free and null all memory
-    ( *lexer )->buffer_size = 0;
-    ( *lexer )->c           = '\0';
-    ( *lexer )->position    = 0;
-    ( *lexer )->line        = 0;
-    ( *lexer )->column      = 0;
-    ( *lexer )->offset      = 0;
-    free( ( *lexer )->buffer );
-    ( *lexer )->buffer = NULL;
-    free( *lexer );
-    *lexer = NULL;
+    lexer->buffer_size = 0;
+    lexer->c           = '\0';
+    lexer->position    = 0;
+    lexer->line        = 0;
+    lexer->column      = 0;
+    lexer->offset      = 0;
+    free( lexer->buffer );
+    lexer->buffer = NULL;
 }
 
-void lexer_tokenize( struct Lexer **lexer ) {
-    while ( ( *lexer )->position < ( *lexer )->buffer_size ) {
-        dbg( ( *lexer )->buffer[( *lexer )->position++] );
+void nem_lexer_tokenize( struct NemLexer *lexer ) {
+    while ( lexer->position < lexer->buffer_size ) {
+        dbg( lexer->buffer[lexer->position++] );
     }
 }
