@@ -157,11 +157,18 @@ enum NemTokenType {
 
 struct NemToken;
 
-extern struct NemToken        *nem_token_create( enum NemTokenType type,
-                                                 const char       *lexeme );
+extern struct NemToken        *nem_token_create( const enum NemTokenType type,
+                                                 const char             *lexeme,
+                                                 const int               position,
+                                                 const size_t length, const char *file,
+                                                 const int line );
 extern void                    nem_token_destroy( struct NemToken **token );
 extern const enum NemTokenType nem_token_type( struct NemToken *token );
 extern const char *const       nem_token_lexeme( struct NemToken *token );
+extern const int               nem_token_position( struct NemToken *token );
+extern const size_t            nem_token_length( struct NemToken *token );
+extern const char *const       nem_token_file( struct NemToken *token );
+extern const int               nem_token_line( struct NemToken *token );
 
 #ifdef __cplusplus
 }
