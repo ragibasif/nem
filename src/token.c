@@ -55,8 +55,9 @@ struct NemToken *nem_token_create( const enum NemTokenType type,
             sizeof *nem_token->file * ( strlen( file ) + 1 ) );
 
 #ifdef NEM_DEBUG
-    fprintf( stderr, "[%s:%d (%s)] type: %d -- lexeme: %s\n", __FILE__,
-             __LINE__, __func__, nem_token->type, nem_token->lexeme );
+    fprintf( stderr, "[%s:%d (%s)] ", __FILE__, __LINE__, __func__ );
+    fprintf( stderr, "type: %d -- lexeme: %s\n", nem_token->type,
+             nem_token->lexeme );
 #endif // NEM_DEBUG
 
     return nem_token;

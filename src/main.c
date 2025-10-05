@@ -10,37 +10,62 @@
  *
  */
 
+#include "common.h"
+#include "compiler.h"
 #include "dbg.h"
-#include "nem.h"
 
-#include <assert.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#define DEFAULT_TEST_FILE "tests/e2e/test_00001.c"
+// #define DEFAULT_TEST_FILE "src/token.h"
 
-#define DEFAULT_TEST_FILE "tests/test_01.c"
+static char *nem_read_file( const char *path ) {
+    FILE *file = fopen( path, "rb" );
+    if ( !file ) {
+        fprintf( stderr, "Could not open file\n" );
+        errno = EIO;
+        exit( errno );
+    }
 
-static void nem_run( char *file );
+    if ( !strrchr( path, '.' ) ) {
+        fprintf( stderr, "Input file must end in '.c'\n" );
+        errno = EINVAL;
+        exit( errno );
+    }
 
-static void nem_run( char *file ) {
+    fseek( file, 0L, SEEK_END );
+    size_t fileSize = ftell( file );
+    rewind( file );
+
     // Important: remember to free this buffer
-    char           *buffer  = nem_read_file( file );
-    size_t          buf_len = strlen( buffer );
-    struct NemLexer lexer;
-    nem_lexer_create( &lexer, buffer );
-    assert( buf_len == lexer.buffer_size );
-    assert( strcmp( buffer, lexer.buffer ) == 0 );
+    char *buffer = malloc( fileSize + 1 );
+    if ( !buffer ) {
+        fprintf( stderr, "Could not allocate memory\n" );
+        errno = ENOMEM;
+        exit( errno );
+    }
 
-    nem_lexer_tokenize( &lexer );
+    size_t bytesRead = fread( buffer, sizeof( char ), fileSize, file );
+    if ( bytesRead < fileSize ) {
+        fprintf( stderr, "Could not read file\n" );
+        errno = EIO;
+        exit( errno );
+    }
+    buffer[bytesRead] = '\0';
 
-    nem_lexer_destroy( &lexer );
+    fclose( file );
+    return buffer;
+}
+
+static void nem_run( const char *file ) {
+    // Important: remember to free this buffer
+    char *buffer = nem_read_file( file );
+
+    nem_compiler_run( buffer, file );
+
     free( buffer );
     buffer = NULL;
 }
 
 int main( int argc, char **argv ) {
-    nem_log( __FILE__, __LINE__, __func__, "Starting" );
 
     dbg( DEFAULT_TEST_FILE );
 
@@ -48,3 +73,23 @@ int main( int argc, char **argv ) {
 
     return EXIT_SUCCESS;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// Notes
+////////////////////////////////////////////////////////////////////////////////
+
+/*
+ * compilation stages:
+ * lexer - tokenize the source code
+ * parser - convert tokens to ast
+ * assembly - convert ast to assembly
+ * code emission - write assembly to file
+ * compiler driver calls the preprocessor, compiler, assembler, and linker
+ * clang, gcc are compiler drivers
+ * compiler takes .c and outputs .o
+ * linker takes all .o and generates executable
+ * ld - GNU linker
+ * as - GNU assembler
+ */
+
+////////////////////////////////////////////////////////////////////////////////
