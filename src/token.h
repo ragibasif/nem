@@ -19,7 +19,7 @@ extern "C" {
 
 enum NemTokenType {
     // Special tokens
-    NTT_UNKNOWN,
+    NTT_ERROR,
     NTT_EOF,
     NTT_COMMENT,
 
@@ -155,19 +155,19 @@ enum NemTokenType {
     NTT_COUNT
 };
 
-struct NemToken;
+struct NemToken {
+    enum NemTokenType type;
+    int               index; // starting index in the source buffer
+    size_t            size;  // size (length) of the token
+    int               line;  // line number
+};
 
-extern struct NemToken        *nem_token_create( const enum NemTokenType type,
-                                                 const char             *lexeme,
-                                                 const int               position,
-                                                 const size_t length, const char *file,
-                                                 const int line );
-extern void                    nem_token_destroy( struct NemToken **token );
+extern struct NemToken         nem_token_init( const enum NemTokenType type,
+                                               const int index, const size_t size,
+                                               const int line );
 extern const enum NemTokenType nem_token_type( struct NemToken *token );
-extern const char *const       nem_token_lexeme( struct NemToken *token );
-extern const int               nem_token_position( struct NemToken *token );
-extern const size_t            nem_token_length( struct NemToken *token );
-extern const char *const       nem_token_file( struct NemToken *token );
+extern const int               nem_token_index( struct NemToken *token );
+extern const size_t            nem_token_size( struct NemToken *token );
 extern const int               nem_token_line( struct NemToken *token );
 
 #ifdef __cplusplus

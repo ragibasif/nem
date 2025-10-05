@@ -107,8 +107,8 @@ void nem_lexer_tokenize( struct NemLexer **lexer ) {
     ( *lexer )->ch = ( *lexer )->buffer[( *lexer )->position];
     dbg( ( *lexer )->buffer );
 
-    while ( ( *lexer )->position < ( *lexer )->size ||
-            ( *lexer )->buffer[( *lexer )->position] == '\0' ) {
+    while ( ( *lexer )->position < ( *lexer )->size &&
+            ( *lexer )->buffer[( *lexer )->position] != '\0' ) {
 
         // skip white space and count the lines to be added
         const size_t start = ( *lexer )->position;
