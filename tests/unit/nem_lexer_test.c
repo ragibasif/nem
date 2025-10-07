@@ -10,7 +10,9 @@
  *
  */
 
+#include "../../src/dbg.h"
 #include "../../src/lexer.h"
+#include "../../src/token.h"
 #include "utils.h"
 
 #include <assert.h>
@@ -18,23 +20,42 @@
 #include <string.h>
 
 int main( int argc, char **argv ) {
-    struct NemLexer *nem_lexer = NULL;
-    assert( nem_lexer == NULL );
+    static char *input_buffer =
+        "+ - * / % ~ & | ^ < > = ! ? () { } [ ] , . ; :";
+    static char *input_file = "main.c";
 
-    // invalid ,should return NULL
-    nem_lexer = nem_lexer_create( NULL, NULL );
-    assert( nem_lexer == NULL );
-    nem_lexer = nem_lexer_create( "", NULL );
-    assert( nem_lexer == NULL );
-    nem_lexer = nem_lexer_create( NULL, "" );
-    assert( nem_lexer == NULL );
+    char *buffer = malloc( sizeof *buffer * ( strlen( input_buffer ) + 1 ) );
+    assert( buffer != NULL );
+    memcpy( buffer, input_buffer,
+            sizeof *buffer * ( strlen( input_buffer ) + 1 ) );
+    char *file = malloc( sizeof *file * ( strlen( input_file ) + 1 ) );
+    assert( file != NULL );
+    memcpy( file, input_file, sizeof *file * ( strlen( input_file ) + 1 ) );
 
-    static char *input_buffer = "int main() { return 0; }";
-    static char *input_file   = "main.c";
-
-    nem_lexer = nem_lexer_create( input_buffer, input_file );
-    nem_lexer_destroy( &nem_lexer );
-    assert( nem_lexer == NULL );
+    NemLexer *lexer = nem_lexer_create( buffer, file );
+    while ( 1 ) {
+        NemToken *token = nem_lexer_scan( &lexer );
+        dbg( token->type );
+        dbg( token->lexeme );
+        dbg( token->size );
+        dbg( token->position );
+        dbg( token->line );
+        dbg( token->column );
+        if ( token->type == NTT_EOF ) {
+            dbg( token->type );
+            dbg( token->lexeme );
+            dbg( token->size );
+            dbg( token->position );
+            dbg( token->line );
+            dbg( token->column );
+            nem_token_destroy( &token );
+            dbg( token );
+            break;
+        }
+        nem_token_destroy( &token );
+        dbg( token );
+    }
+    nem_lexer_destroy( &lexer );
 
     TEST_PASSED();
 }

@@ -16,13 +16,21 @@ extern "C" {
 #endif
 
 #include "common.h"
+#include "token.h"
 
-struct NemLexer;
+typedef struct {
+    char        *buffer;   // input buffer
+    size_t       size;     // size of the input buffer
+    char        *file;     // source file name
+    char         ch;       // current character
+    size_t       position; // position of the current character
+    unsigned int line;     // current line number (starts at 1)
+    unsigned int column;   // current column number (starts at 1)
+} NemLexer;
 
-extern struct NemLexer *nem_lexer_create( const char *buffer,
-                                          const char *file );
-extern void             nem_lexer_tokenize( struct NemLexer **lexer );
-extern void             nem_lexer_destroy( struct NemLexer **lexer );
+extern NemLexer *nem_lexer_create( char *buffer, char *file );
+extern void      nem_lexer_destroy( NemLexer **lexer );
+NemToken        *nem_lexer_scan( NemLexer **lexer );
 
 #ifdef __cplusplus
 }

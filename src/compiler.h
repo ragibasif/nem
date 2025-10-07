@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 
-extern void nem_compiler_run( const char *buffer, const char *file );
+extern void nem_compiler_run( char *buffer, char *file );
 
 #ifdef __cplusplus
 }

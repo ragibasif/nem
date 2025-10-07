@@ -17,7 +17,9 @@ extern "C" {
 
 #include "common.h"
 
-enum NemTokenType {
+// token
+
+typedef enum {
     // Special tokens
     NTT_ERROR,
     NTT_EOF,
@@ -76,8 +78,8 @@ enum NemTokenType {
     NTT_NOT_EQUAL,     // !=
     NTT_LESS_EQUAL,    // <=
     NTT_GREATER_EQUAL, // >=
-    NTT_DEFINE,        // :=
     NTT_ELLIPSIS,      // ...
+    NTT_DEFINE,        // :=
 
     NTT_POINTER,
     NTT_TYPE_NAME,
@@ -108,7 +110,6 @@ enum NemTokenType {
 
     NTT_DEFAULT,
     NTT_DO,
-    // NTT_DEFER,
     NTT_ELSE,
     NTT_FOR,
     NTT_ENUM,
@@ -127,6 +128,7 @@ enum NemTokenType {
     NTT_UNSIGNED,
     NTT_VOLATILE,
     NTT_WHILE,
+    NTT_DEFER,
 
     NTT_FUNCTION,
     NTT_GOTO,
@@ -152,23 +154,26 @@ enum NemTokenType {
     NTT_FLT64,  // double (64 bits)
 
     // Internal
+    NTT_ID,
     NTT_COUNT
-};
+} NemTokenType;
 
-struct NemToken {
-    enum NemTokenType type;
-    int               index; // starting index in the source buffer
-    size_t            size;  // size (length) of the token
-    int               line;  // line number
-};
+typedef struct {
+    NemTokenType type;
+    char        *lexeme;
+    size_t       position; // start position (index) in the source buffer
+    size_t       size;     // size (length) of the token
+    unsigned int line;     // line number (always >= 1)
+    unsigned int column;   // column number of start of token (always >= 1)
+} NemToken;
 
-extern struct NemToken         nem_token_init( const enum NemTokenType type,
-                                               const int index, const size_t size,
-                                               const int line );
-extern const enum NemTokenType nem_token_type( struct NemToken *token );
-extern const int               nem_token_index( struct NemToken *token );
-extern const size_t            nem_token_size( struct NemToken *token );
-extern const int               nem_token_line( struct NemToken *token );
+extern NemToken *nem_token_create( const NemTokenType type, const char *lexeme,
+                                   const size_t size, const size_t position,
+                                   const unsigned int line,
+                                   const unsigned int column );
+
+extern void nem_token_type_print( const NemTokenType type );
+extern void nem_token_destroy( NemToken **token );
 
 #ifdef __cplusplus
 }

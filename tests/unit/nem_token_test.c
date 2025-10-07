@@ -18,19 +18,26 @@
 #include <string.h>
 
 int main( int argc, char **argv ) {
-    struct NemToken nem_token;
+    NemToken *token;
 
-    nem_token = nem_token_init( NTT_ERROR, 100, strlen( "illegal" ), 23 );
-    assert( nem_token_type( &nem_token ) == NTT_ERROR );
-    assert( nem_token_index( &nem_token ) == 100 );
-    assert( nem_token_size( &nem_token ) == strlen( "illegal" ) );
-    assert( nem_token_line( &nem_token ) == 23 );
+    token = nem_token_create( NTT_ERROR, "illegal", strlen( "illegal" ), 100,
+                              23, 29 );
+    assert( token->type == NTT_ERROR );
+    assert( token->position == 100 );
+    assert( token->size == strlen( "illegal" ) );
+    assert( token->line == 23 );
+    assert( token->column == 29 );
+    nem_token_destroy( &token );
+    assert( token == NULL );
 
-    nem_token = nem_token_init( NTT_EOF, 200, strlen( "EOF" ), 32 );
-    assert( nem_token_type( &nem_token ) == NTT_EOF );
-    assert( nem_token_index( &nem_token ) == 200 );
-    assert( nem_token_size( &nem_token ) == strlen( "EOF" ) );
-    assert( nem_token_line( &nem_token ) == 32 );
+    token = nem_token_create( NTT_EOF, "\0", strlen( "\0" ), 200, 2432, 9 );
+    assert( token->type == NTT_EOF );
+    assert( token->position == 200 );
+    assert( token->size == strlen( "\0" ) );
+    assert( token->line == 2432 );
+    assert( token->column == 9 );
+    nem_token_destroy( &token );
+    assert( token == NULL );
 
     TEST_PASSED();
 }

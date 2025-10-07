@@ -10,25 +10,21 @@
  *
  */
 
-#include "common.h"
 #include "compiler.h"
 #include "dbg.h"
 
 #define DEFAULT_TEST_FILE "tests/e2e/test_00001.c"
-// #define DEFAULT_TEST_FILE "src/token.h"
 
 static char *nem_read_file( const char *path ) {
     FILE *file = fopen( path, "rb" );
     if ( !file ) {
         fprintf( stderr, "Could not open file\n" );
-        errno = EIO;
-        exit( errno );
+        exit( EXIT_FAILURE );
     }
 
     if ( !strrchr( path, '.' ) ) {
         fprintf( stderr, "Input file must end in '.c'\n" );
-        errno = EINVAL;
-        exit( errno );
+        exit( EXIT_FAILURE );
     }
 
     fseek( file, 0L, SEEK_END );
@@ -39,15 +35,13 @@ static char *nem_read_file( const char *path ) {
     char *buffer = malloc( fileSize + 1 );
     if ( !buffer ) {
         fprintf( stderr, "Could not allocate memory\n" );
-        errno = ENOMEM;
-        exit( errno );
+        exit( EXIT_FAILURE );
     }
 
     size_t bytesRead = fread( buffer, sizeof( char ), fileSize, file );
     if ( bytesRead < fileSize ) {
         fprintf( stderr, "Could not read file\n" );
-        errno = EIO;
-        exit( errno );
+        exit( EXIT_FAILURE );
     }
     buffer[bytesRead] = '\0';
 
@@ -55,19 +49,22 @@ static char *nem_read_file( const char *path ) {
     return buffer;
 }
 
-static void nem_run( const char *file ) {
-    // Important: remember to free this buffer
+static void nem_run( const char *path ) {
+    // PERF: remember to free these buffers
+    // NOTE: freed in nem_lexer_destroy
+    char *file = malloc( sizeof *file * ( strlen( path ) + 1 ) );
+    if ( file == NULL ) { return; }
+    memcpy( file, path, sizeof *file * ( strlen( path ) + 1 ) );
     char *buffer = nem_read_file( file );
 
     nem_compiler_run( buffer, file );
-
-    free( buffer );
-    buffer = NULL;
 }
 
 int main( int argc, char **argv ) {
 
     dbg( DEFAULT_TEST_FILE );
+
+    char *input = DEFAULT_TEST_FILE;
 
     nem_run( DEFAULT_TEST_FILE );
 

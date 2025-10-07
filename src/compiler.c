@@ -12,9 +12,12 @@
 #include "compiler.h"
 
 #include "lexer.h"
+#include "token.h"
 
-void nem_compiler_run( const char *buffer, const char *file ) {
-    struct NemLexer *nem_lexer = nem_lexer_create( buffer, file );
-    nem_lexer_tokenize( &nem_lexer );
-    nem_lexer_destroy( &nem_lexer );
+void nem_compiler_run( char *buffer, char *file ) {
+    NemLexer *lexer = nem_lexer_create( buffer, file );
+    while ( 1 ) {
+        NemToken *token = nem_lexer_scan( &lexer );
+        if ( token->type == NTT_EOF ) { break; }
+    }
 }
