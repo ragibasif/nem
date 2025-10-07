@@ -122,6 +122,45 @@ static bool nem_lexer_match( NemLexer **lexer, const char ch ) {
     return true;
 }
 
+static NemToken *nem_lexer_string( NemLexer **lexer );
+
+static NemToken *nem_lexer_string( NemLexer **lexer ) {
+    NemToken    *token;
+    const size_t string_start  = ( *lexer )->position;
+    size_t       string_length = 0;
+
+    while ( nem_lexer_peek( lexer ) != '"' &&
+            ( ( *lexer )->position < ( *lexer )->size ) ) {
+        if ( nem_lexer_peek( lexer ) == '\n' ) { ( *lexer )->line++; }
+        nem_lexer_next( lexer );
+        string_length++;
+    }
+
+    if ( !( ( *lexer )->position < ( *lexer )->size ) ) {
+        token =
+            nem_token_create( NTT_ERROR, "String not terminated.",
+                              strlen( "String not terminated." ), string_start,
+                              ( *lexer )->line, ( *lexer )->column );
+    }
+
+    // closing quote
+    nem_lexer_next( lexer );
+    char *buffer = malloc( sizeof *buffer * ( string_length + 1 ) );
+    memcpy( buffer, ( *lexer )->buffer + string_start, string_length );
+    buffer[string_length] = '\0';
+
+    dbg( buffer );
+
+    token =
+        nem_token_create( NTT_STRING, buffer, strlen( buffer ), string_start,
+                          ( *lexer )->line, ( *lexer )->column );
+
+    free( buffer );
+    buffer = NULL;
+
+    return token;
+}
+
 NemToken *nem_lexer_scan( NemLexer **lexer ) {
 
     nem_lexer_skip_white_space( lexer );
@@ -396,6 +435,11 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
             }
             return token;
         }
+
+        case '"':
+            token = nem_lexer_string( lexer );
+            dbg( token->lexeme );
+            return token;
 
         case '\0': {
             token = nem_token_create( NTT_EOF, "\0", strlen( "\0" ),
