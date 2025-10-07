@@ -55,6 +55,7 @@ typedef enum {
     NTT_MULTIPLY_ASSIGNMENT, // *=
     NTT_DIVIDE_ASSIGNMENT,   // /=
     NTT_MODULO_ASSIGNMENT,   // %=
+    NTT_INVERT_ASSIGNMENT,   // ~=
 
     NTT_BITWISE_AND_ASSIGNMENT,         // &=
     NTT_BITWISE_OR_ASSIGNMENT,          // |=
@@ -93,10 +94,12 @@ typedef enum {
     NTT_CLOSE_SQUARE_BRACKET, // ]
     NTT_CLOSE_CURLY_BRACE,    // }
 
-    NTT_COMMA,     // ,
-    NTT_PERIOD,    // .
-    NTT_SEMICOLON, // ;
-    NTT_COLON,     // :
+    NTT_COMMA,        // ,
+    NTT_PERIOD,       // .
+    NTT_SEMICOLON,    // ;
+    NTT_COLON,        // :
+    NTT_SINGLE_QUOTE, // '
+    NTT_DOUBLE_QUOTE, // "
 
     // Keywords
     NTT_AUTO,
