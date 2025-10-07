@@ -21,7 +21,7 @@
 
 int main( int argc, char **argv ) {
     static char *input_buffer =
-        "+ += // - * / \n % ~ & | ^ < > = ! ? () { } [ ] , . ; :";
+        "+ += // - * / \n Hello % /*~ & | ^ */< > = ! ? () { } [ ] , . ; :";
     static char *input_file = "main.c";
 
     char *buffer = malloc( sizeof *buffer * ( strlen( input_buffer ) + 1 ) );

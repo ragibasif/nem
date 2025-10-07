@@ -84,17 +84,27 @@ static void nem_lexer_skip_white_space( NemLexer **lexer ) {
         switch ( ch ) {
             case ' ':
             case '\t':
+            case '\f':
             case '\r': nem_lexer_next( lexer ); break;
             case '\n':
                 ( *lexer )->line++;
                 nem_lexer_next( lexer );
                 break;
-            case '/': // TODO: C style comments
+            case '/': // C++ and C style comments get skipped
                 if ( nem_lexer_double_peek( lexer ) == '/' ) {
                     while ( nem_lexer_peek( lexer ) != '\n' &&
                             ( ( *lexer )->position < ( *lexer )->size ) ) {
                         nem_lexer_next( lexer );
                     }
+                    // TODO: test
+                } else if ( nem_lexer_double_peek( lexer ) == '*' ) {
+                    while ( ( *lexer )->position < ( *lexer )->size &&
+                            ( nem_lexer_peek( lexer ) != '*' ||
+                              nem_lexer_double_peek( lexer ) != '/' ) ) {
+                        nem_lexer_next( lexer );
+                    }
+                    nem_lexer_next( lexer );
+                    nem_lexer_next( lexer );
                 } else {
                     return;
                 }
