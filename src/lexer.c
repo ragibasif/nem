@@ -157,6 +157,12 @@ static NemToken *nem_lexer_string( NemLexer **lexer ) {
 }
 
 static bool nem_lexer_is_decimal( char ch ) { return '0' <= ch && ch <= '9'; }
+static bool nem_lexer_is_alphabet( char ch ) {
+    return ( 'a' <= ch && ch <= 'z' ) || ( 'A' <= ch && ch <= 'Z' );
+}
+static bool nem_lexer_is_alpha_numeric( char ch ) {
+    return nem_lexer_is_alphabet( ch ) || nem_lexer_is_decimal( ch );
+}
 
 static NemToken *nem_lexer_number( NemLexer **lexer ) {
     NemToken    *token;
@@ -195,6 +201,67 @@ static NemToken *nem_lexer_number( NemLexer **lexer ) {
     return token;
 }
 
+static bool nem_lexer_is_identifier_alphabet( char ch ) {
+    return nem_lexer_is_alphabet( ch ) || ch == '_' ||
+           nem_lexer_is_decimal( ch );
+}
+
+static NemToken *nem_lexer_identifier_type( NemLexer   **lexer,
+                                            const char  *buffer,
+                                            const size_t identifier_start ) {
+    NemToken *token;
+    switch ( buffer[0] ) {
+        case 'a': {
+            if ( nem_token_check_keyword( NTT_AUTO, buffer ) ) {
+                token = nem_token_create( NTT_AUTO, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+        }
+
+        case 'e': {
+            if ( nem_token_check_keyword( NTT_ELSE, buffer ) ) {
+                token = nem_token_create( NTT_ELSE, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+        }
+
+        default:
+            token = nem_token_create( NTT_IDENTIFIER, buffer, strlen( buffer ),
+                                      identifier_start, ( *lexer )->line,
+                                      ( *lexer )->column );
+    }
+    return token;
+}
+
+static NemToken *nem_lexer_identifier( NemLexer **lexer ) {
+    NemToken    *token;
+    const size_t identifier_start  = ( *lexer )->position - 1;
+    size_t       identifier_length = 1;
+
+    while ( nem_lexer_is_identifier_alphabet( nem_lexer_peek( lexer ) ) ) {
+        nem_lexer_next( lexer );
+        identifier_length++;
+    }
+
+    char *buffer = malloc( sizeof *buffer * ( identifier_length + 1 ) );
+    memcpy( buffer, ( *lexer )->buffer + identifier_start, identifier_length );
+    buffer[identifier_length] = '\0';
+
+    token = nem_token_create( NTT_IDENTIFIER, buffer, strlen( buffer ),
+                              identifier_start, ( *lexer )->line,
+                              ( *lexer )->column );
+    token = nem_lexer_identifier_type( lexer, buffer, identifier_start );
+
+    free( buffer );
+    buffer = NULL;
+
+    return token;
+}
+
 NemToken *nem_lexer_scan( NemLexer **lexer ) {
 
     nem_lexer_skip_white_space( lexer );
@@ -203,6 +270,10 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
     // find longest match at start of input
     // convert matching substring into a token
     char ch = nem_lexer_next( lexer );
+    if ( nem_lexer_is_alphabet( ch ) || ch == '_' ) {
+        token = nem_lexer_identifier( lexer );
+        return token;
+    }
     if ( nem_lexer_is_decimal( ch ) ) {
         token = nem_lexer_number( lexer );
         return token;
