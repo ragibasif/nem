@@ -131,7 +131,7 @@ typedef enum {
     NTT_UNSIGNED,
     NTT_VOLATILE,
     NTT_WHILE,
-    NTT_DEFER,
+    // NTT_DEFER,
 
     NTT_FUNCTION,
     NTT_GOTO,
@@ -177,6 +177,8 @@ extern NemToken *nem_token_create( const NemTokenType type, const char *lexeme,
 
 extern void nem_token_type_print( const NemTokenType type );
 extern void nem_token_destroy( NemToken **token );
+extern bool nem_token_check_keyword( const NemTokenType type,
+                                     const char        *buffer );
 
 #ifdef __cplusplus
 }
