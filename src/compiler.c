@@ -11,6 +11,7 @@
 
 #include "compiler.h"
 
+#include "dbg.h"
 #include "lexer.h"
 #include "token.h"
 
@@ -19,5 +20,9 @@ void nem_compiler_run( char *buffer, char *file ) {
     while ( 1 ) {
         NemToken *token = nem_lexer_scan( &lexer );
         if ( token->type == NTT_EOF ) { break; }
+        dbg( token );
+        dbg( token->lexeme );
+        nem_token_destroy( &token );
     }
+    nem_lexer_destroy( &lexer );
 }

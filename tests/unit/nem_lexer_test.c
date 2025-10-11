@@ -20,9 +20,9 @@
 #include <string.h>
 
 int main( int argc, char **argv ) {
-    static char *input_buffer =
-        "+ += // - * / \n Hello % /*~ & | ^ */< > = ! ? () { } [ ] , . ; :";
-    static char *input_file = "main.c";
+    static char *input_buffer = "+ += // - * / \n % 432 /*~ & | ^ */ < 2.234 > "
+                                "= ! ? else () { } [ ] , . ; :";
+    static char *input_file   = "main.c";
 
     char *buffer = malloc( sizeof *buffer * ( strlen( input_buffer ) + 1 ) );
     assert( buffer != NULL );

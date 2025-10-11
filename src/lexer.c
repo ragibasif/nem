@@ -11,8 +11,6 @@
 
 #include "lexer.h"
 
-#include "dbg.h"
-
 NemLexer *nem_lexer_create( char *buffer, char *file ) {
     NemLexer *lexer = malloc( sizeof *lexer );
     if ( lexer == NULL ) { return NULL; }
@@ -220,9 +218,246 @@ static NemToken *nem_lexer_identifier_type( NemLexer   **lexer,
             }
         }
 
+        case 'b': {
+            if ( nem_token_check_keyword( NTT_BOOL, buffer ) ) {
+                token = nem_token_create( NTT_BOOL, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_BREAK, buffer ) ) {
+                token = nem_token_create( NTT_BREAK, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+        }
+
+        case 'c': {
+            if ( nem_token_check_keyword( NTT_CASE, buffer ) ) {
+                token = nem_token_create( NTT_CASE, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_CHAR, buffer ) ) {
+                token = nem_token_create( NTT_CHAR, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_CONST, buffer ) ) {
+                token = nem_token_create( NTT_CONST, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_CONTINUE, buffer ) ) {
+                token = nem_token_create( NTT_CONST, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+        }
+
+        case 'd': {
+            if ( nem_token_check_keyword( NTT_DEFAULT, buffer ) ) {
+                token = nem_token_create( NTT_DEFAULT, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_DO, buffer ) ) {
+                token = nem_token_create( NTT_DO, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_DOUBLE, buffer ) ) {
+                token = nem_token_create( NTT_DOUBLE, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+        }
+
         case 'e': {
             if ( nem_token_check_keyword( NTT_ELSE, buffer ) ) {
                 token = nem_token_create( NTT_ELSE, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_ENUM, buffer ) ) {
+                token = nem_token_create( NTT_ENUM, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_EXTERN, buffer ) ) {
+                token = nem_token_create( NTT_EXTERN, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+        }
+
+        case 'f': {
+            if ( nem_token_check_keyword( NTT_FALSE, buffer ) ) {
+                token = nem_token_create( NTT_FALSE, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_FLOAT, buffer ) ) {
+                token = nem_token_create( NTT_FLOAT, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_FOR, buffer ) ) {
+                token = nem_token_create( NTT_FOR, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+        }
+
+        case 'i': {
+            if ( nem_token_check_keyword( NTT_IF, buffer ) ) {
+                token = nem_token_create( NTT_IF, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_INT, buffer ) ) {
+                token = nem_token_create( NTT_INT, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+        }
+
+        case 'g': {
+            if ( nem_token_check_keyword( NTT_GOTO, buffer ) ) {
+                token = nem_token_create( NTT_GOTO, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+        }
+
+        case 'l': {
+            if ( nem_token_check_keyword( NTT_LONG, buffer ) ) {
+                token = nem_token_create( NTT_LONG, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+        }
+
+        case 'r': {
+            if ( nem_token_check_keyword( NTT_REGISTER, buffer ) ) {
+                token = nem_token_create(
+                    NTT_REGISTER, buffer, strlen( buffer ), identifier_start,
+                    ( *lexer )->line, ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_RETURN, buffer ) ) {
+                token = nem_token_create( NTT_RETURN, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+        }
+
+        case 's': {
+            if ( nem_token_check_keyword( NTT_SHORT, buffer ) ) {
+                token = nem_token_create( NTT_SHORT, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_SIGNED, buffer ) ) {
+                token = nem_token_create( NTT_SIGNED, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_SIZEOF, buffer ) ) {
+                token = nem_token_create( NTT_SIZEOF, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_STATIC, buffer ) ) {
+                token = nem_token_create( NTT_STATIC, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_STRUCT, buffer ) ) {
+                token = nem_token_create( NTT_STRUCT, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_SWITCH, buffer ) ) {
+                token = nem_token_create( NTT_SWITCH, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+        }
+
+        case 't': {
+            if ( nem_token_check_keyword( NTT_TRUE, buffer ) ) {
+                token = nem_token_create( NTT_TRUE, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_TYPEDEF, buffer ) ) {
+                token = nem_token_create( NTT_TYPEDEF, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+        }
+
+        case 'u': {
+            if ( nem_token_check_keyword( NTT_UNION, buffer ) ) {
+                token = nem_token_create( NTT_UNION, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_UNSIGNED, buffer ) ) {
+                token = nem_token_create(
+                    NTT_UNSIGNED, buffer, strlen( buffer ), identifier_start,
+                    ( *lexer )->line, ( *lexer )->column );
+                return token;
+            }
+        }
+
+        case 'v': {
+            if ( nem_token_check_keyword( NTT_VOID, buffer ) ) {
+                token = nem_token_create( NTT_VOID, buffer, strlen( buffer ),
+                                          identifier_start, ( *lexer )->line,
+                                          ( *lexer )->column );
+                return token;
+            }
+            if ( nem_token_check_keyword( NTT_VOLATILE, buffer ) ) {
+                token = nem_token_create(
+                    NTT_VOLATILE, buffer, strlen( buffer ), identifier_start,
+                    ( *lexer )->line, ( *lexer )->column );
+                return token;
+            }
+        }
+
+        case 'w': {
+            if ( nem_token_check_keyword( NTT_WHILE, buffer ) ) {
+                token = nem_token_create( NTT_WHILE, buffer, strlen( buffer ),
                                           identifier_start, ( *lexer )->line,
                                           ( *lexer )->column );
                 return token;
@@ -532,16 +767,9 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
         }
 
         case ':': {
-            // TBD
-            if ( nem_lexer_match( lexer, '=' ) ) {
-                token = nem_token_create(
-                    NTT_DEFINE, ":=", strlen( ":=" ), ( *lexer )->position - 1,
-                    ( *lexer )->line, ( *lexer )->column );
-            } else {
-                token = nem_token_create(
-                    NTT_COLON, ":", strlen( ":" ), ( *lexer )->position,
-                    ( *lexer )->line, ( *lexer )->column );
-            }
+            token = nem_token_create( NTT_COLON, ":", strlen( ":" ),
+                                      ( *lexer )->position, ( *lexer )->line,
+                                      ( *lexer )->column );
             return token;
         }
 
