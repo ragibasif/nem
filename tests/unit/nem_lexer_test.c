@@ -10,7 +10,6 @@
  *
  */
 
-#include "../../src/dbg.h"
 #include "../../src/lexer.h"
 #include "../../src/token.h"
 #include "utils.h"
@@ -19,11 +18,7 @@
 #include <stdio.h>
 #include <string.h>
 
-int main( int argc, char **argv ) {
-    static char *input_buffer = "+ += // - * / \n % 432 /*~ & | ^ */ < 2.234 > "
-                                "= ! ? else () { } [ ] , . ; :";
-    static char *input_file   = "main.c";
-
+void nem_lexer_helper( const char *input_buffer, const char *input_file ) {
     char *buffer = malloc( sizeof *buffer * ( strlen( input_buffer ) + 1 ) );
     assert( buffer != NULL );
     memcpy( buffer, input_buffer,
@@ -35,27 +30,23 @@ int main( int argc, char **argv ) {
     NemLexer *lexer = nem_lexer_create( buffer, file );
     while ( 1 ) {
         NemToken *token = nem_lexer_scan( &lexer );
-        dbg( token->type );
-        dbg( token->lexeme );
-        dbg( token->size );
-        dbg( token->position );
-        dbg( token->line );
-        dbg( token->column );
         if ( token->type == NTT_EOF ) {
-            dbg( token->type );
-            dbg( token->lexeme );
-            dbg( token->size );
-            dbg( token->position );
-            dbg( token->line );
-            dbg( token->column );
             nem_token_destroy( &token );
-            dbg( token );
             break;
         }
+        for ( size_t i = token->position; i < token->position + token->size;
+              i++ ) {
+            assert( buffer[i] == token->lexeme[i - token->position] );
+        }
         nem_token_destroy( &token );
-        dbg( token );
     }
     nem_lexer_destroy( &lexer );
+}
+
+int main( int argc, char **argv ) {
+    nem_lexer_helper( "int main() { return 0; }", "main.c" );
+    nem_lexer_helper( "//", "main.c" );
+    nem_lexer_helper( "/**/", "main.c" );
 
     TEST_PASSED();
 }

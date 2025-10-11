@@ -14,30 +14,29 @@
 #include "utils.h"
 
 #include <assert.h>
-#include <stdio.h>
 #include <string.h>
 
-int main( int argc, char **argv ) {
+void nem_token_test_helper( NemTokenType type, const char *lexeme, size_t size,
+                            size_t position, const unsigned int line,
+                            const unsigned int column ) {
     NemToken *token;
-
-    token = nem_token_create( NTT_ERROR, "illegal", strlen( "illegal" ), 100,
-                              23, 29 );
-    assert( token->type == NTT_ERROR );
-    assert( token->position == 100 );
-    assert( token->size == strlen( "illegal" ) );
-    assert( token->line == 23 );
-    assert( token->column == 29 );
+    token = nem_token_create( type, lexeme, size, position, line, column );
+    assert( token->type == type );
+    assert( strcmp( lexeme, token->lexeme ) == 0 );
+    assert( token->position == position );
+    assert( token->size == size );
+    assert( token->line == line );
+    assert( token->column == column );
     nem_token_destroy( &token );
     assert( token == NULL );
+}
 
-    token = nem_token_create( NTT_EOF, "\0", strlen( "\0" ), 200, 2432, 9 );
-    assert( token->type == NTT_EOF );
-    assert( token->position == 200 );
-    assert( token->size == strlen( "\0" ) );
-    assert( token->line == 2432 );
-    assert( token->column == 9 );
-    nem_token_destroy( &token );
-    assert( token == NULL );
+int main( int argc, char **argv ) {
+    nem_token_test_helper( NTT_ERROR, "illegal", strlen( "illegal" ), 100, 23,
+                           29 );
+    nem_token_test_helper( NTT_EOF, "EOF", strlen( "EOF" ), 200, 2432, 9 );
+    nem_token_test_helper( NTT_INT, "int", strlen( "int" ), 9274382, 2,
+                           734289 );
 
     TEST_PASSED();
 }

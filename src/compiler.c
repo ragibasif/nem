@@ -11,7 +11,6 @@
 
 #include "compiler.h"
 
-#include "dbg.h"
 #include "lexer.h"
 #include "token.h"
 
@@ -19,7 +18,10 @@ void nem_compiler_run( char *buffer, char *file ) {
     NemLexer *lexer = nem_lexer_create( buffer, file );
     while ( 1 ) {
         NemToken *token = nem_lexer_scan( &lexer );
-        if ( token->type == NTT_EOF ) { break; }
+        if ( token->type == NTT_EOF ) {
+            nem_token_destroy( &token );
+            break;
+        }
         printf( "type: %d, lexeme: %s, size: %zu, position: %zu, "
                 "line: %d, column: %d\n",
                 token->type, token->lexeme, token->size, token->position,

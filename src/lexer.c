@@ -780,7 +780,7 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
         case '"': token = nem_lexer_string( lexer ); return token;
 
         case '\0': {
-            token = nem_token_create( NTT_EOF, "\0", strlen( "\0" ),
+            token = nem_token_create( NTT_EOF, "EOF", strlen( "EOF" ),
                                       ( *lexer )->position - 1,
                                       ( *lexer )->line, ( *lexer )->column );
             return token;
