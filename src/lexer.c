@@ -20,8 +20,8 @@ NemLexer *nem_lexer_create( char *buffer, char *file ) {
     lexer->file     = file;
     lexer->ch       = ' ';
     lexer->position = 0;
-    lexer->line     = 0;
-    lexer->column   = 0;
+    lexer->line     = 1;
+    lexer->column   = 1;
 
     return lexer;
 }
@@ -519,7 +519,7 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
             if ( nem_lexer_match( lexer, '=' ) ) {
                 token =
                     nem_token_create( NTT_PLUS_ASSIGNMENT, "+=", strlen( "+=" ),
-                                      ( *lexer )->position - 1,
+                                      ( *lexer )->position - 2,
                                       ( *lexer )->line, ( *lexer )->column );
             } else {
                 token = nem_token_create(
@@ -533,11 +533,11 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
             if ( nem_lexer_match( lexer, '=' ) ) {
                 token = nem_token_create(
                     NTT_MINUS_ASSIGNMENT, "-=", strlen( "-=" ),
-                    ( *lexer )->position - 1, ( *lexer )->line,
+                    ( *lexer )->position - 2, ( *lexer )->line,
                     ( *lexer )->column );
             } else {
                 token = nem_token_create(
-                    NTT_MINUS, "-", strlen( "-" ), ( *lexer )->position,
+                    NTT_MINUS, "-", strlen( "-" ), ( *lexer )->position - 1,
                     ( *lexer )->line, ( *lexer )->column );
             }
             return token;
@@ -547,11 +547,11 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
             if ( nem_lexer_match( lexer, '=' ) ) {
                 token = nem_token_create(
                     NTT_MULTIPLY_ASSIGNMENT, "*=", strlen( "*=" ),
-                    ( *lexer )->position - 1, ( *lexer )->line,
+                    ( *lexer )->position - 2, ( *lexer )->line,
                     ( *lexer )->column );
             } else {
                 token = nem_token_create(
-                    NTT_MULTIPLY, "*", strlen( "*" ), ( *lexer )->position,
+                    NTT_MULTIPLY, "*", strlen( "*" ), ( *lexer )->position - 1,
                     ( *lexer )->line, ( *lexer )->column );
             }
             return token;
@@ -561,11 +561,11 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
             if ( nem_lexer_match( lexer, '=' ) ) {
                 token = nem_token_create(
                     NTT_DIVIDE_ASSIGNMENT, "/=", strlen( "/=" ),
-                    ( *lexer )->position - 1, ( *lexer )->line,
+                    ( *lexer )->position - 2, ( *lexer )->line,
                     ( *lexer )->column );
             } else {
                 token = nem_token_create(
-                    NTT_DIVIDE, "/", strlen( "/" ), ( *lexer )->position,
+                    NTT_DIVIDE, "/", strlen( "/" ), ( *lexer )->position - 1,
                     ( *lexer )->line, ( *lexer )->column );
             }
             return token;
@@ -575,11 +575,11 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
             if ( nem_lexer_match( lexer, '=' ) ) {
                 token = nem_token_create(
                     NTT_MODULO_ASSIGNMENT, "%=", strlen( "%=" ),
-                    ( *lexer )->position - 1, ( *lexer )->line,
+                    ( *lexer )->position - 2, ( *lexer )->line,
                     ( *lexer )->column );
             } else {
                 token = nem_token_create(
-                    NTT_MODULO, "%", strlen( "%" ), ( *lexer )->position,
+                    NTT_MODULO, "%", strlen( "%" ), ( *lexer )->position - 1,
                     ( *lexer )->line, ( *lexer )->column );
             }
             return token;
@@ -589,11 +589,11 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
             if ( nem_lexer_match( lexer, '=' ) ) {
                 token = nem_token_create(
                     NTT_INVERT_ASSIGNMENT, "~=", strlen( "~=" ),
-                    ( *lexer )->position - 1, ( *lexer )->line,
+                    ( *lexer )->position - 2, ( *lexer )->line,
                     ( *lexer )->column );
             } else {
                 token = nem_token_create(
-                    NTT_INVERT, "~", strlen( "~" ), ( *lexer )->position,
+                    NTT_INVERT, "~", strlen( "~" ), ( *lexer )->position - 1,
                     ( *lexer )->line, ( *lexer )->column );
             }
             return token;
@@ -603,12 +603,13 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
             if ( nem_lexer_match( lexer, '=' ) ) {
                 token = nem_token_create(
                     NTT_BITWISE_AND_ASSIGNMENT, "&=", strlen( "&=" ),
-                    ( *lexer )->position - 1, ( *lexer )->line,
+                    ( *lexer )->position - 2, ( *lexer )->line,
                     ( *lexer )->column );
             } else {
-                token = nem_token_create(
-                    NTT_BITWISE_AND, "&", strlen( "&" ), ( *lexer )->position,
-                    ( *lexer )->line, ( *lexer )->column );
+                token =
+                    nem_token_create( NTT_BITWISE_AND, "&", strlen( "&" ),
+                                      ( *lexer )->position - 1,
+                                      ( *lexer )->line, ( *lexer )->column );
             }
             return token;
         }
@@ -617,12 +618,13 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
             if ( nem_lexer_match( lexer, '=' ) ) {
                 token = nem_token_create(
                     NTT_BITWISE_OR_ASSIGNMENT, "|=", strlen( "|=" ),
-                    ( *lexer )->position - 1, ( *lexer )->line,
+                    ( *lexer )->position - 2, ( *lexer )->line,
                     ( *lexer )->column );
             } else {
-                token = nem_token_create(
-                    NTT_BITWISE_OR, "|", strlen( "|" ), ( *lexer )->position,
-                    ( *lexer )->line, ( *lexer )->column );
+                token =
+                    nem_token_create( NTT_BITWISE_OR, "|", strlen( "|" ),
+                                      ( *lexer )->position - 1,
+                                      ( *lexer )->line, ( *lexer )->column );
             }
             return token;
         }
@@ -631,12 +633,13 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
             if ( nem_lexer_match( lexer, '=' ) ) {
                 token = nem_token_create(
                     NTT_BITWISE_XOR_ASSIGNMENT, "^=", strlen( "^=" ),
-                    ( *lexer )->position - 1, ( *lexer )->line,
+                    ( *lexer )->position - 2, ( *lexer )->line,
                     ( *lexer )->column );
             } else {
-                token = nem_token_create(
-                    NTT_BITWISE_XOR, "^", strlen( "^" ), ( *lexer )->position,
-                    ( *lexer )->line, ( *lexer )->column );
+                token =
+                    nem_token_create( NTT_BITWISE_XOR, "^", strlen( "^" ),
+                                      ( *lexer )->position - 1,
+                                      ( *lexer )->line, ( *lexer )->column );
             }
             return token;
         }
@@ -645,11 +648,11 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
             if ( nem_lexer_match( lexer, '=' ) ) {
                 token =
                     nem_token_create( NTT_LESS_EQUAL, "<=", strlen( "<=" ),
-                                      ( *lexer )->position - 1,
+                                      ( *lexer )->position - 2,
                                       ( *lexer )->line, ( *lexer )->column );
             } else {
                 token = nem_token_create(
-                    NTT_LESS, "<", strlen( "<" ), ( *lexer )->position,
+                    NTT_LESS, "<", strlen( "<" ), ( *lexer )->position - 1,
                     ( *lexer )->line, ( *lexer )->column );
             }
             return token;
@@ -659,11 +662,11 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
             if ( nem_lexer_match( lexer, '=' ) ) {
                 token =
                     nem_token_create( NTT_GREATER_EQUAL, ">=", strlen( ">=" ),
-                                      ( *lexer )->position - 1,
+                                      ( *lexer )->position - 2,
                                       ( *lexer )->line, ( *lexer )->column );
             } else {
                 token = nem_token_create(
-                    NTT_GREATER, ">", strlen( ">" ), ( *lexer )->position,
+                    NTT_GREATER, ">", strlen( ">" ), ( *lexer )->position - 1,
                     ( *lexer )->line, ( *lexer )->column );
             }
             return token;
@@ -672,12 +675,13 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
         case '=': {
             if ( nem_lexer_match( lexer, '=' ) ) {
                 token = nem_token_create(
-                    NTT_EQUAL, "==", strlen( "==" ), ( *lexer )->position - 1,
+                    NTT_EQUAL, "==", strlen( "==" ), ( *lexer )->position - 2,
                     ( *lexer )->line, ( *lexer )->column );
             } else {
-                token = nem_token_create(
-                    NTT_ASSIGNMENT, "=", strlen( "=" ), ( *lexer )->position,
-                    ( *lexer )->line, ( *lexer )->column );
+                token =
+                    nem_token_create( NTT_ASSIGNMENT, "=", strlen( "=" ),
+                                      ( *lexer )->position - 1,
+                                      ( *lexer )->line, ( *lexer )->column );
             }
             return token;
         }
@@ -686,11 +690,11 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
             if ( nem_lexer_match( lexer, '=' ) ) {
                 token =
                     nem_token_create( NTT_NOT_EQUAL, "!=", strlen( "!=" ),
-                                      ( *lexer )->position - 1,
+                                      ( *lexer )->position - 2,
                                       ( *lexer )->line, ( *lexer )->column );
             } else {
                 token = nem_token_create(
-                    NTT_NOT, "!", strlen( "!" ), ( *lexer )->position,
+                    NTT_NOT, "!", strlen( "!" ), ( *lexer )->position - 1,
                     ( *lexer )->line, ( *lexer )->column );
             }
             return token;
@@ -698,78 +702,78 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
 
         case '?': {
             token = nem_token_create( NTT_QUESTION, "?", strlen( "?" ),
-                                      ( *lexer )->position, ( *lexer )->line,
-                                      ( *lexer )->column );
+                                      ( *lexer )->position - 1,
+                                      ( *lexer )->line, ( *lexer )->column );
             return token;
         }
 
         case '(': {
             token = nem_token_create( NTT_OPEN_PARENTHESIS, "(", strlen( "(" ),
-                                      ( *lexer )->position, ( *lexer )->line,
-                                      ( *lexer )->column );
+                                      ( *lexer )->position - 1,
+                                      ( *lexer )->line, ( *lexer )->column );
             return token;
         }
 
         case ')': {
             token = nem_token_create( NTT_CLOSE_PARENTHESIS, ")", strlen( ")" ),
-                                      ( *lexer )->position, ( *lexer )->line,
-                                      ( *lexer )->column );
+                                      ( *lexer )->position - 1,
+                                      ( *lexer )->line, ( *lexer )->column );
             return token;
         }
 
         case '{': {
             token = nem_token_create( NTT_OPEN_CURLY_BRACE, "{", strlen( "{" ),
-                                      ( *lexer )->position, ( *lexer )->line,
-                                      ( *lexer )->column );
+                                      ( *lexer )->position - 1,
+                                      ( *lexer )->line, ( *lexer )->column );
             return token;
         }
 
         case '}': {
             token = nem_token_create( NTT_CLOSE_CURLY_BRACE, "}", strlen( "}" ),
-                                      ( *lexer )->position, ( *lexer )->line,
-                                      ( *lexer )->column );
+                                      ( *lexer )->position - 1,
+                                      ( *lexer )->line, ( *lexer )->column );
             return token;
         }
 
         case '[': {
             token = nem_token_create( NTT_OPEN_SQUARE_BRACKET, "[",
-                                      strlen( "[" ), ( *lexer )->position,
+                                      strlen( "[" ), ( *lexer )->position - 1,
                                       ( *lexer )->line, ( *lexer )->column );
             return token;
         }
 
         case ']': {
             token = nem_token_create( NTT_CLOSE_SQUARE_BRACKET, "]",
-                                      strlen( "]" ), ( *lexer )->position,
+                                      strlen( "]" ), ( *lexer )->position - 1,
                                       ( *lexer )->line, ( *lexer )->column );
             return token;
         }
 
         case ',': {
             token = nem_token_create( NTT_COMMA, ",", strlen( "," ),
-                                      ( *lexer )->position, ( *lexer )->line,
-                                      ( *lexer )->column );
+                                      ( *lexer )->position - 1,
+                                      ( *lexer )->line, ( *lexer )->column );
             return token;
         }
 
         case '.': {
             token = nem_token_create( NTT_PERIOD, ".", strlen( "." ),
-                                      ( *lexer )->position, ( *lexer )->line,
-                                      ( *lexer )->column );
+                                      ( *lexer )->position - 1,
+                                      ( *lexer )->line, ( *lexer )->column );
             return token;
         }
 
         case ';': {
             token = nem_token_create( NTT_SEMICOLON, ";", strlen( ";" ),
-                                      ( *lexer )->position, ( *lexer )->line,
-                                      ( *lexer )->column );
+                                      ( *lexer )->position - 1,
+                                      ( *lexer )->line, ( *lexer )->column );
             return token;
         }
 
         case ':': {
             token = nem_token_create( NTT_COLON, ":", strlen( ":" ),
-                                      ( *lexer )->position, ( *lexer )->line,
-                                      ( *lexer )->column );
+                                      ( *lexer )->position - 1,
+                                      ( *lexer )->line, ( *lexer )->column );
             return token;
         }
 
@@ -777,15 +781,15 @@ NemToken *nem_lexer_scan( NemLexer **lexer ) {
 
         case '\0': {
             token = nem_token_create( NTT_EOF, "\0", strlen( "\0" ),
-                                      ( *lexer )->position, ( *lexer )->line,
-                                      ( *lexer )->column );
+                                      ( *lexer )->position - 1,
+                                      ( *lexer )->line, ( *lexer )->column );
             return token;
         }
 
         default: { // if no match is found, return error token
             token = nem_token_create( NTT_ERROR, "error", strlen( "error" ),
-                                      ( *lexer )->position, ( *lexer )->line,
-                                      ( *lexer )->column );
+                                      ( *lexer )->position - 1,
+                                      ( *lexer )->line, ( *lexer )->column );
             return token;
         }
     }

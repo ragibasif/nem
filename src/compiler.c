@@ -20,8 +20,14 @@ void nem_compiler_run( char *buffer, char *file ) {
     while ( 1 ) {
         NemToken *token = nem_lexer_scan( &lexer );
         if ( token->type == NTT_EOF ) { break; }
-        dbg( token );
-        dbg( token->lexeme );
+        printf( "type: %d, lexeme: %s, size: %zu, position: %zu, "
+                "line: %d, column: %d\n",
+                token->type, token->lexeme, token->size, token->position,
+                token->line, token->column );
+        for ( size_t i = token->position; i < token->position + token->size;
+              i++ ) {
+            printf( "buffer[%zu]: %c\n", i, buffer[i] );
+        }
         nem_token_destroy( &token );
     }
     nem_lexer_destroy( &lexer );
