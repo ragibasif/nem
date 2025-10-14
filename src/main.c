@@ -10,6 +10,7 @@
  *
  */
 
+#include "cli.h"
 #include "compiler.h"
 #include "dbg.h"
 
@@ -62,6 +63,10 @@ static void nem_run( const char *path ) {
 
 int main( int argc, char **argv ) {
 
+    NemCLI *cli = nem_cli_create( argc, argv );
+
+    nem_cli_destroy( &cli );
+
     dbg( DEFAULT_TEST_FILE );
 
     char *input = DEFAULT_TEST_FILE;
@@ -76,6 +81,7 @@ int main( int argc, char **argv ) {
 ////////////////////////////////////////////////////////////////////////////////
 
 /*
+ * compilers - takes source code and translates it into machine language
  * compilation stages:
  * lexer - tokenize the source code
  * parser - convert tokens to ast
@@ -87,6 +93,15 @@ int main( int argc, char **argv ) {
  * linker takes all .o and generates executable
  * ld - GNU linker
  * as - GNU assembler
+ * syntactic analysis - done during compile time and outputs a tree data
+ *  structure in accordance to syntax rules
+ * semantic evaluation - during run time, takes the tree as input
+ * BNF grammar - Backus-Naur Form, a list of syntax rules
+ * parsing - checks if a string is in the grammar
+ * every derivation has a corresponding parse tree
+ * parse trees can be built top down or bottom up from the derivation
+ * parse trees contain all the information in a derivation of a string
+ * abstract syntax tree (AST) - a parse tree with non-essential nodes left out
  */
 
 ////////////////////////////////////////////////////////////////////////////////

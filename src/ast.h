@@ -15,10 +15,44 @@
 extern "C" {
 #endif
 
-// typedef struct {
-// } NemAST;
+#include "token.h"
+
+typedef enum {
+    NNT_EXPR,
+    NNT_DECL,
+    NNT_STMT,
+    NNT_COUNT,
+} NemNodeType;
+
+typedef struct {
+    NemToken *token;
+} NemNode;
+
+typedef struct {
+    NemNode *node;
+} NemExpr;
+
+typedef struct {
+    NemNode *node;
+} NemDecl;
+
+typedef struct {
+    NemNode *node;
+} NemStmt;
 
 #ifdef __cplusplus
 }
 #endif
 #endif // AST_H
+
+////////////////////////////////////////////////////////////////////////////////
+// Notes
+////////////////////////////////////////////////////////////////////////////////
+
+/*
+
+   - statement
+   - expression
+   - declaration
+
+*/

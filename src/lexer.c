@@ -81,7 +81,8 @@ static void nem_lexer_skip_white_space( NemLexer **lexer ) {
         char ch = nem_lexer_peek( lexer );
         switch ( ch ) {
             case ' ':
-            case '\t':
+            case '\t': ( *lexer )->column += 8 - ( ( *lexer )->column % 8 );
+            case '\v':
             case '\f':
             case '\r': nem_lexer_next( lexer ); break;
             case '\n':
