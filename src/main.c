@@ -10,98 +10,58 @@
  *
  */
 
-#include "cli.h"
-#include "compiler.h"
+#include "common.h"
 #include "dbg.h"
 
-#define DEFAULT_TEST_FILE "tests/e2e/test_00001.c"
+struct nem_memory_block {
+    struct nem_memory_block *next;
+    size_t                   size;
+};
 
-static char *nem_read_file( const char *path ) {
-    FILE *file = fopen( path, "rb" );
-    if ( !file ) {
-        fprintf( stderr, "Could not open file\n" );
-        exit( EXIT_FAILURE );
-    }
+static struct nem_memory_block *block_head = NULL;
 
-    if ( !strrchr( path, '.' ) ) {
-        fprintf( stderr, "Input file must end in '.c'\n" );
-        exit( EXIT_FAILURE );
-    }
+static void *nem_malloc( size_t size ) {
+    assert( size >= 0 );
+    if ( size < 0 ) { return NULL; }
+    struct nem_memory_block *ptr = malloc( sizeof *ptr + size );
+    assert( ptr != NULL );
+    ptr->next  = block_head;
+    ptr->size  = size;
+    block_head = ptr;
 
-    fseek( file, 0L, SEEK_END );
-    size_t fileSize = ftell( file );
-    rewind( file );
-
-    // Important: remember to free this buffer
-    char *buffer = malloc( fileSize + 1 );
-    if ( !buffer ) {
-        fprintf( stderr, "Could not allocate memory\n" );
-        exit( EXIT_FAILURE );
-    }
-
-    size_t bytesRead = fread( buffer, sizeof( char ), fileSize, file );
-    if ( bytesRead < fileSize ) {
-        fprintf( stderr, "Could not read file\n" );
-        exit( EXIT_FAILURE );
-    }
-    buffer[bytesRead] = '\0';
-
-    fclose( file );
-    return buffer;
+    return (void *)ptr + sizeof *ptr;
 }
 
-static void nem_run( const char *path ) {
-    // PERF: remember to free these buffers
-    // NOTE: freed in nem_lexer_destroy
-    char *file = malloc( sizeof *file * ( strlen( path ) + 1 ) );
-    if ( file == NULL ) { return; }
-    memcpy( file, path, sizeof *file * ( strlen( path ) + 1 ) );
-    char *buffer = nem_read_file( file );
+static void *nem_realloc( void *ptr, size_t size ) {
+    if ( ptr == NULL ) { return nem_malloc( size ); }
 
-    nem_compiler_run( buffer, file );
+    struct nem_memory_block *block = (struct nem_memory_block *)ptr;
+    block--;
+    if ( block->size >= size ) { return ptr; }
+    void *new_ptr = nem_malloc( size );
+    memcpy( new_ptr, ptr, block->size );
+    return new_ptr;
 }
 
-int main( int argc, char **argv ) {
-
-    NemCLI *cli = nem_cli_create( argc, argv );
-
-    nem_cli_destroy( &cli );
-
-    dbg( DEFAULT_TEST_FILE );
-
-    char *input = DEFAULT_TEST_FILE;
-
-    nem_run( DEFAULT_TEST_FILE );
-
-    return EXIT_SUCCESS;
+static void *nem_calloc( size_t count, size_t size ) {
+    void *ptr = nem_malloc( count * size );
+    memset( ptr, 0, count * size );
+    return ptr;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Notes
-////////////////////////////////////////////////////////////////////////////////
+static void nem_free( void *ptr ) {
+    assert( ptr != NULL );
+    struct nem_memory_block *new_ptr = (struct nem_memory_block *)ptr;
+    new_ptr--;
+    memset( ptr, 0, new_ptr->size );
+}
 
-/*
- * compilers - takes source code and translates it into machine language
- * compilation stages:
- * lexer - tokenize the source code
- * parser - convert tokens to ast
- * assembly - convert ast to assembly
- * code emission - write assembly to file
- * compiler driver calls the preprocessor, compiler, assembler, and linker
- * clang, gcc are compiler drivers
- * compiler takes .c and outputs .o
- * linker takes all .o and generates executable
- * ld - GNU linker
- * as - GNU assembler
- * syntactic analysis - done during compile time and outputs a tree data
- *  structure in accordance to syntax rules
- * semantic evaluation - during run time, takes the tree as input
- * BNF grammar - Backus-Naur Form, a list of syntax rules
- * parsing - checks if a string is in the grammar
- * every derivation has a corresponding parse tree
- * parse trees can be built top down or bottom up from the derivation
- * parse trees contain all the information in a derivation of a string
- * abstract syntax tree (AST) - a parse tree with non-essential nodes left out
- */
+static void nem_free_all( void ) {
+    while ( block_head ) {
+        struct nem_memory_block *next_block = block_head->next;
+        free( block_head );
+        block_head = next_block;
+    }
+}
 
-////////////////////////////////////////////////////////////////////////////////
+int main( int argc, char **argv ) { return EXIT_SUCCESS; }
