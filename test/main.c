@@ -10,15 +10,10 @@
  *
  */
 
-#include "common.h"
-#include "memory.h"
+#include <stdio.h>
 
-int main( int argc, char **argv ) {
+int main( void ) {
+    printf( "test\n" );
 
-    int *a = nem_malloc( 42342 );
-    LOG( "test" );
-    TRACE( "TRACE" );
-    nem_free( a );
-    atexit( nem_memory_cleanup );
-    return EXIT_SUCCESS;
+    return 0;
 }

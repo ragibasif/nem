@@ -1,24 +1,32 @@
-# Compiled Object files
+# Prerequisites
+*.d
+
+# Object files
 *.o
-*.obj
 *.ko
+*.obj
 *.elf
+
+# Linker output
+*.ilk
+*.map
+*.exp
 
 # Precompiled Headers
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
 *.so
 *.so.*
 *.dylib
-*.dll
-
-# Compiled Static libraries
-*.a
-*.lib
-*.la
-*.lo
 
 # Executables
 *.exe
@@ -28,262 +36,22 @@
 *.x86_64
 *.hex
 
-# Build directories
-build/
-bin/
-obj/
-dist/
-target/
-
 # Debug files
 *.dSYM/
 *.su
 *.idb
 *.pdb
 
-# Dependency files
-*.d
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
 
-# Assembly files
-*.s
-*.S
-
-# Linker output
-*.ilk
-*.map
-*.exp
-
-# Core dumps
-core
-core.*
-*.core
-vgcore.*
-
-# CMake
-CMakeCache.txt
-CMakeFiles/
-CMakeScripts/
-cmake_install.cmake
-install_manifest.txt
-compile_commands.json
-CTestTestfile.cmake
-_deps/
-
-# Autotools
-/autom4te.cache
-/aclocal.m4
-/compile
-/configure
-/depcomp
-/install-sh
-/missing
-/stamp-h1
-*.m4
-config.h
-config.h.in
-config.log
-config.status
-.deps/
-.dirstamp
-Makefile
-Makefile.in
-/libtool
-/ltmain.sh
-
-# pkg-config
-*.pc
-
-# Editor and IDE files
-# Vim
-*.swp
-*.swo
-*~
-.*.sw?
-Session.vim
-
-# Emacs
-*~
-\#*\#
-/.emacs.desktop
-/.emacs.desktop.lock
-*.elc
-auto-save-list
-tramp
-.\#*
-
-# VS Code
-.vscode/
-*.code-workspace
-.history/
-
-# Visual Studio
-.vs/
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
-*.vcxproj
-*.vcxproj.filters
-*.vcxproj.user
-*.sln
-
-# CLion / JetBrains
-.idea/
-cmake-build-*/
-*.iml
-*.iws
-.idea_modules/
-
-# Eclipse
-.cproject
-.project
-.settings/
-
-# Sublime Text
-*.sublime-project
-*.sublime-workspace
-
-# Atom
-.atom/
-
-# Testing and Coverage
-*.gcno
-*.gcda
-*.gcov
-coverage/
-*.coverage
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.pytest_cache/
-*.test
-test_results/
-lcov.info
-coverage.info
-
-# Valgrind
-*.valgrind
-vgcore.*
-massif.out.*
-callgrind.out.*
-
-# Profiling
-gmon.out
-*.prof
-perf.data
-perf.data.old
-
-# Documentation
-docs/html/
-docs/latex/
-docs/man/
-docs/_build/
-*.pdf
-*.aux
-*.log
-*.toc
-*.idx
-*.ilg
-*.ind
-
-# OS specific files
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-._*
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-
-# Linux
-*~
-.directory
-.Trash-*
-.nfs*
-
-# Windows
-Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
-*.stackdump
-[Dd]esktop.ini
-$RECYCLE.BIN/
-*.lnk
-
-# Backup files
-*.bak
-*.backup
-*.old
-*.orig
-*.tmp
-*.temp
-*~
-
-# Package files
-*.tar
-*.tar.gz
-*.tgz
-*.zip
-*.7z
-*.rar
-*.deb
-*.rpm
-
-# Log files
-*.log
-logs/
-*.log.*
-
-# Database files
-*.db
-*.sqlite
-*.sqlite3
-
-# Generated version files
-version.h
-version.c
-
-# Tags and ctags
-tags
-TAGS
-.tags
-.TAGS
-gtags.files
-GPATH
-GRTAGS
-GTAGS
-
-# Clang
-.clangd/
-.cache/
-compile_flags.txt
-
-# ASan/MSan/TSan
-*.asan
-*.msan
-*.tsan
-
-# Temporary files
-tmp/
-temp/
-*.tmp
-*.swp
-
-# Environment and local config
-.env
-.env.local
-local.conf
-local_config.h
-
-# Custom build artifacts (adjust as needed)
-*.generated.c
-*.generated.hthal
+# debug information files
+*.dwo
 
 extras

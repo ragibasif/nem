@@ -1,5 +1,5 @@
 /*
- * File: main.c
+ * File: string.h
  * Author: Ragib Asif
  * Email: ragibasif@tuta.io
  * GitHub: https://github.com/ragibasif
@@ -10,15 +10,19 @@
  *
  */
 
+#ifndef STRING_H
+#define STRING_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "common.h"
-#include "memory.h"
 
-int main( int argc, char **argv ) {
+#define nem_strlen( s ) ( (int)strlen( s ) )
 
-    int *a = nem_malloc( 42342 );
-    LOG( "test" );
-    TRACE( "TRACE" );
-    nem_free( a );
-    atexit( nem_memory_cleanup );
-    return EXIT_SUCCESS;
+#ifdef __cplusplus
 }
+#endif
+
+#endif // STRING_H
