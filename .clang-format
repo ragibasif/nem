@@ -27,3 +27,4 @@ AllowShortLoopsOnASingleLine: true
 AlwaysBreakTemplateDeclarations: Yes
 PointerAlignment: Right
 SpacesInParentheses: true
+SpacesInAngles: true

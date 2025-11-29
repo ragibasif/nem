@@ -8,83 +8,20 @@
  * Copyright (c) 2025 Ragib Asif
  * Version 1.0.0
  *
- * Description:
- *   Implementation file that provides functionality described in example.h.
- *   Include detailed description of what this module does.
- *
- * Notes:
- *   - Any important implementation details or assumptions
- *   - Known limitations or edge cases
- *   - Performance considerations if applicable
- *
- */
-
-/* ============================================================================
- * Includes
- * ============================================================================
  */
 
 #include "alloc.h"
-
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-/* ============================================================================
- * Private Macros and Constants
- * ============================================================================
- */
-
-#define BUFFER_SIZE 256
-
-/* Debug trace macro - disabled by default, can be enabled with -DDEBUG=1 */
-#ifndef DEBUG
-#define DEBUG 0
-#endif
-
-#if DEBUG
-#define DEBUG_TRACE( fmt, ... )                                                \
-    do {                                                                       \
-        fprintf( stderr, "[DEBUG] %s:%d in %s(): " fmt "\n", __FILE__,         \
-                 __LINE__, __func__, ##__VA_ARGS__ );                          \
-        fflush( stderr );                                                      \
-    } while ( 0 )
-#else
-#define DEBUG_TRACE( fmt, ... )                                                \
-    do { (void)0; } while ( 0 )
-#endif
-
-/* ============================================================================
- * Private Type Definitions
- * ============================================================================
- */
 
 struct nem_memory_block {
     struct nem_memory_block *next;
     size_t                   size;
 };
 
-/* ============================================================================
- * Static Variables
- * ============================================================================
- */
-
 static struct nem_memory_block *block_head = NULL;
-
-/* ============================================================================
- * Private Function Declarations
- * ============================================================================
- */
 
 static size_t nem_allocation_count( void );
 static size_t nem_total_allocated( void );
 static size_t nem_total_memory_usage( void );
-
-/* ============================================================================
- * Public Function Implementations
- * ============================================================================
- */
 
 void *nem_malloc( const size_t size ) {
     if ( !( size > 0 ) ) { return NULL; }
@@ -137,11 +74,6 @@ void nem_memory_cleanup( void ) {
         block_head = next_block;
     }
 }
-
-/* ============================================================================
- * Private Function Implementations
- * ============================================================================
- */
 
 static size_t nem_allocation_count( void ) {
     size_t                   count = 0;
