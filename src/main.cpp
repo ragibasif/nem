@@ -11,6 +11,8 @@
 #endif
 
 #include "dbg.h"
+#include "driver.hpp"
+#include "lexer.hpp"
 #include "token.hpp"
 
 #include <fstream>
@@ -19,55 +21,6 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-
-namespace nem {
-
-class Lexer {
-  private:
-    std::vector< Token > tokens;
-
-    std::string            source;
-    std::string            path;
-    unsigned long long int line;
-    unsigned long long int column;
-    size_t                 position;
-
-    static bool is_alpha( const char ch ) {
-        return ( 'a' <= ch && ch <= 'z' ) || ( 'A' <= ch && ch <= 'Z' ) ||
-               ch == '_';
-    }
-
-    static bool is_digit( const char ch ) { return '0' <= ch && ch <= '9'; }
-
-    static bool is_alnum( const char ch ) {
-        return is_alpha( ch ) || is_digit( ch );
-    }
-
-    char next() { return source[position++]; }
-
-    void scan(); // TODO
-
-    char peek() {
-        if ( position >= source.size() ) { return '\0'; }
-        return source[position];
-    }
-
-    char double_peek() {
-        if ( position + 1 >= source.size() ) { return '\0'; }
-        return source[position + 1];
-    }
-
-  public:
-    Lexer( std::string source ) : source( source ) {
-        tokens   = std::vector< Token >();
-        line     = 1;
-        column   = 1;
-        position = 0;
-        dbg( source, line, column, position );
-    }
-};
-
-} // namespace nem
 
 std::string read( std::string path ) {
     constexpr auto read_size = std::size_t( 4096 );
@@ -90,7 +43,8 @@ int main( [[maybe_unused]] int argc, [[maybe_unused]] char **argv ) {
     auto wc_start  = std::chrono::high_resolution_clock::now();
     auto cpu_start = std::clock();
 
-    nem::Lexer lexer( read( "src/main.cpp" ) );
+    Lexer  lexer( read( "tests/main.c" ) );
+    Driver driver( "tests/main.c" );
 
     auto   wc_end  = std::chrono::high_resolution_clock::now();
     auto   cpu_end = std::clock();

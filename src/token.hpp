@@ -3,11 +3,6 @@
 #include <string>
 
 enum class Types {
-    // Special tokens
-    Error,
-    Eof,
-    Comment,
-
     // Literals
     Identifier, // main
     Number,     // 12345
@@ -139,6 +134,11 @@ enum class Types {
     Flt32,  // float
     Flt64,  // double (64 bits)
             // Internal
+
+    // Special tokens
+    Error,
+    Eof,
+    Comment,
     Id,
     Count
 };
@@ -149,9 +149,12 @@ class Token {
     std::string  literal;
     std::string  lexeme;
     unsigned int line;
+    unsigned int column;
+    size_t       position;
 
   public:
     Token( enum Types type, std::string literal, std::string lexeme,
-           unsigned int line )
-        : type( type ), literal( literal ), lexeme( lexeme ), line( line ) {}
+           unsigned int line, unsigned int column, size_t position )
+        : type( type ), literal( literal ), lexeme( lexeme ), line( line ),
+          column( column ), position( position ) {}
 };
