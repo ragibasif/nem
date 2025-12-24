@@ -26,6 +26,17 @@ class Lexer {
         return source[position + 1];
     }
 
+    static bool is_alpha( const char ch ) {
+        return ( ch >= 'a' && ch <= 'z' ) || ( ch >= 'A' && ch <= 'Z' ) ||
+               ch == '_';
+    }
+
+    static bool is_digit( const char ch ) { return ch >= '0' && ch <= '9'; }
+
+    static bool is_alnum( const char ch ) {
+        return is_alpha( ch ) || is_digit( ch );
+    }
+
     void tokenize() {
         const char ch = next();
         switch ( ch ) {

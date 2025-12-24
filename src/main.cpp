@@ -10,14 +10,10 @@
 
 #include "driver.hpp"
 #include "lexer.hpp"
-#include "token.hpp"
 
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
 
 std::string read( std::string path ) {
     constexpr auto read_size = std::size_t( 4096 );
