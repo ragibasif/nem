@@ -1,17 +1,15 @@
 #pragma once
 
-#include <string>
-
-enum class Types {
+enum class Token {
     // Literals
     Identifier, // main
     Number,     // 12345
     Digit,      // [0-9]
     Integer,    // 12345
-    Double,
-    Float,     // 123.45
-    Character, // 'a'
-    String,    // "abc"
+    Double,     // double
+    Float,      // float
+    Character,  // 'a'
+    String,     // "abc"
     Constant,
 
     // Operators
@@ -58,11 +56,10 @@ enum class Types {
     LessEqual,    // <=
     GreaterEqual, // >=
     Ellipsis,     // ...
-    Define,       // :=
 
     Pointer,
     TypeName,
-    Typedef,
+    Typedef, // typedef
 
     // Delimiters
     OpenParenthesis,    // (
@@ -73,7 +70,7 @@ enum class Types {
     CloseCurlyBrace,    // }
 
     Comma,       // ,
-    Period,      // .
+    Dot,         // .
     Semicolon,   // ;
     Colon,       // :
     SingleQuote, // '
@@ -81,48 +78,49 @@ enum class Types {
 
     // Keywords
     Asm,
-    Auto,
-    Break,
-    Case,
-    Const,
-    Continue,
+    Auto,     // auto
+    Break,    // break
+    Case,     // case
+    Const,    // const
+    Continue, // continue
     Print,
-    True,
-    False,
+    True,  // true
+    False, // false
 
-    Default,
-    Do,
-    Else,
-    For,
-    Enum,
-    Extern,
-    Int,
-    Char,
-    Long,
-    Register,
-    Short,
-    Signed,
-    Sizeof,
-    Static,
-    Struct,
-    Undef,
-    Union,
-    Unsigned,
-    Volatile,
-    While,
+    Default,  // default
+    Do,       // do
+    Else,     // else
+    For,      // for
+    Enum,     // enum
+    Extern,   // extern
+    Int,      // int
+    Char,     // char
+    Long,     // long
+    Register, // register
+    Short,    // short
+    Signed,   // signed
+    Sizeof,   // sizeof
+    Static,   // static
+    Struct,   // struct
+    Undef,    // undef
+    Union,    // union
+    Unsigned, // unsigned
+    Volatile, // volatile
+    While,    // while
 
     Function,
-    Goto,
-    If,
+    Goto, // goto
+    If,   // if
     Import,
 
-    Return,
+    Return, // return
 
-    Switch,
+    Switch,   // switch
     Variable, // [A-Za-z_]+ [A-Za-z0-9_]*
-              // BUILT-in data types
-    Void,
-    Bool,
+
+    // built-in data types
+    Void,   // void
+    Bool,   // bool
     Int8,   // char
     Uint8,  // unsigned char
     Int16,  // short
@@ -133,7 +131,6 @@ enum class Types {
     Uint64, // unsigned long long
     Flt32,  // float
     Flt64,  // double (64 bits)
-            // Internal
 
     // Special tokens
     Error,
@@ -141,20 +138,4 @@ enum class Types {
     Comment,
     Id,
     Count
-};
-
-class Token {
-  private:
-    enum Types   type;
-    std::string  literal;
-    std::string  lexeme;
-    unsigned int line;
-    unsigned int column;
-    size_t       position;
-
-  public:
-    Token( enum Types type, std::string literal, std::string lexeme,
-           unsigned int line, unsigned int column, size_t position )
-        : type( type ), literal( literal ), lexeme( lexeme ), line( line ),
-          column( column ), position( position ) {}
 };

@@ -1,139 +1,101 @@
 #pragma once
 
-// Debug - disabled by default, can be enabled with -DDEBUG=1
-#ifndef DEBUG
-#define DEBUG 0
-#endif
-
-// Test - disabled by default, can be enabled with -DTEST=1
-#ifndef TEST
-#define TEST 0
-#endif
-
-#include "dbg.h"
 #include "token.hpp"
 
-#include <fstream>
-#include <iostream>
 #include <string>
-#include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 class Lexer {
   private:
     std::vector< Token > tokens{};
     std::string          source{};
-    unsigned int         line{};
-    unsigned int         column{};
-    size_t               position{};
+    size_t               position = 0;
+
+    char next() {
+        if ( position + 1 >= source.size() ) { return '\0'; }
+        return source[position++];
+    }
+
+    char peek() {
+        if ( position >= source.size() ) { return '\0'; }
+        return source[position];
+    }
+
+    char peek_next() {
+        if ( position + 1 >= source.size() ) { return '\0'; }
+        return source[position + 1];
+    }
 
     void tokenize() {
-        while ( position < source.size() ) {
-            char        ch = source[position];
-            std::string literal{};
-            std::string lexeme{};
-            Types       type{};
-            switch ( ch ) {
+        const char ch = next();
+        switch ( ch ) {
 
-                // Delimiters
-                case '(': {
-                    literal = "(";
-                    lexeme  = "(";
-                    type    = Types::OpenParenthesis;
-                    position++;
-                    break;
-                }
-
-                case '[': {
-                    literal = "[";
-                    lexeme  = "[";
-                    type    = Types::OpenSquareBracket;
-                    position++;
-                    break;
-                }
-
-                case '{': {
-                    literal = "{";
-                    lexeme  = "{";
-                    type    = Types::OpenCurlyBrace;
-                    position++;
-                    break;
-                }
-
-                case ')': {
-                    literal = ")";
-                    lexeme  = ")";
-                    type    = Types::CloseParenthesis;
-                    position++;
-                    break;
-                }
-
-                case ']': {
-                    literal = "]";
-                    lexeme  = "]";
-                    type    = Types::CloseSquareBracket;
-                    position++;
-                    break;
-                }
-
-                case '}': {
-                    literal = "}";
-                    lexeme  = "}";
-                    type    = Types::CloseCurlyBrace;
-                    position++;
-                    break;
-                }
-
-                case ',': {
-                    literal = ",";
-                    lexeme  = ",";
-                    type    = Types::Comma;
-                    position++;
-                    break;
-                }
-
-                case '.': {
-                    literal = ".";
-                    lexeme  = ".";
-                    type    = Types::Period;
-                    position++;
-                    break;
-                }
-
-                case ';': {
-                    literal = ";";
-                    lexeme  = ";";
-                    type    = Types::Semicolon;
-                    position++;
-                    break;
-                }
-
-                case ':': {
-                    literal = ":";
-                    lexeme  = ":";
-                    type    = Types::Colon;
-                    position++;
-                    break;
-                }
-
-                default:
-                    literal  = "";
-                    lexeme   = "";
-                    type     = Types::Error;
-                    position = source.size();
+            // Delimiters
+            case '(': {
+                tokens.emplace_back( Token::OpenParenthesis );
+                break;
             }
 
-            Token token( type, literal, lexeme, line, column, position );
-            tokens.push_back( token );
+            case '[': {
+                tokens.emplace_back( Token::OpenSquareBracket );
+                break;
+            }
+
+            case '{': {
+                tokens.emplace_back( Token::OpenCurlyBrace );
+                break;
+            }
+
+            case ')': {
+                tokens.emplace_back( Token::CloseParenthesis );
+                break;
+            }
+
+            case ']': {
+                tokens.emplace_back( Token::CloseSquareBracket );
+                break;
+            }
+
+            case '}': {
+                tokens.emplace_back( Token::CloseCurlyBrace );
+                break;
+            }
+
+            case ',': {
+                tokens.emplace_back( Token::Comma );
+                break;
+            }
+
+            case '.': {
+                tokens.emplace_back( Token::Dot );
+                break;
+            }
+
+            case ';': {
+                tokens.emplace_back( Token::Semicolon );
+                break;
+            }
+
+            case ':': {
+                tokens.emplace_back( Token::Colon );
+                break;
+            }
+
+            default: {
+                tokens.emplace_back( Token::Error );
+                break;
+            }
         }
     }
 
   public:
-    Lexer( std::string source ) : source( source ) {
-        line     = 1;
-        column   = 1;
-        position = 0;
-        tokenize();
+    Lexer( std::string source ) : source( source ) {}
+
+    std::vector< Token > &scan() {
+        while ( position < source.size() ) { tokenize(); }
+
+        tokens.emplace_back( Token::Eof );
+
+        return tokens;
     }
 };

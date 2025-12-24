@@ -1,5 +1,3 @@
-#pragma once
-
 // Debug - disabled by default, can be enabled with -DDEBUG=1
 #ifndef DEBUG
 #define DEBUG 0
@@ -10,7 +8,6 @@
 #define TEST 0
 #endif
 
-#include "dbg.h"
 #include "driver.hpp"
 #include "lexer.hpp"
 #include "token.hpp"
