@@ -10,6 +10,7 @@ class Lexer {
     std::vector< Token > tokens{};
     std::string          source{};
     size_t               position = 0;
+    size_t               offset   = 0;
 
     char next() {
         if ( position + 1 >= source.size() ) { return '\0'; }
@@ -26,6 +27,31 @@ class Lexer {
         return source[position + 1];
     }
 
+    void eat_white_space() {
+        while ( true ) {
+            const char ch = peek();
+            switch ( ch ) {
+                case ' ': {
+                    [[fallthrough]];
+                }
+                case '\r': {
+                    [[fallthrough]];
+                }
+                case '\t': {
+                    next();
+                    break;
+                }
+                case '\n': {
+                    next();
+                    break;
+                }
+                default: {
+                    return;
+                }
+            }
+        }
+    }
+
     static bool is_alpha( const char ch ) {
         return ( ch >= 'a' && ch <= 'z' ) || ( ch >= 'A' && ch <= 'Z' ) ||
                ch == '_';
@@ -38,6 +64,7 @@ class Lexer {
     }
 
     void tokenize() {
+        eat_white_space();
         const char ch = next();
         switch ( ch ) {
 
