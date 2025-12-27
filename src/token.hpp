@@ -1,11 +1,13 @@
 #pragma once
 
-enum class Token {
+#include <string>
+#include <unordered_map>
+#include <variant>
+
+enum class TokenType {
     // Literals
-    Identifier, // main
+    Identifier, // main, [A-Za-z_]+ [A-Za-z0-9_]*
     Number,     // 12345
-    Digit,      // [0-9]
-    Integer,    // 12345
     Double,     // double
     Float,      // float
     Character,  // 'a'
@@ -13,12 +15,12 @@ enum class Token {
     Constant,
 
     // Operators
-    Plus,     // +
-    Minus,    // -
-    Multiply, // *
-    Divide,   // /
-    Modulo,   // %
-    Invert,   // ~
+    Add,       // +
+    Subtract,  // -
+    Multiply,  // *
+    Divide,    // /
+    Remainder, // %
+    Invert,    // ~
 
     BitwiseAnd,        // &
     BitwiseOr,         // |
@@ -26,12 +28,12 @@ enum class Token {
     BitwiseShiftLeft,  // <<
     BitwiseShiftRight, // >>
 
-    PlusAssignment,     // +=
-    MinusAssignment,    // -=
-    MultiplyAssignment, // *=
-    DivideAssignment,   // /=
-    ModuloAssignment,   // %=
-    InvertAssignment,   // ~=
+    AddAssignment,       // +=
+    SubtractAssignment,  // -=
+    MultiplyAssignment,  // *=
+    DivideAssignment,    // /=
+    RemainderAssignment, // %=
+    InvertAssignment,    // ~=
 
     BitwiseAndAssignment,        // &=
     BitwiseOrAssignment,         // |=
@@ -115,8 +117,7 @@ enum class Token {
 
     Return, // return
 
-    Switch,   // switch
-    Variable, // [A-Za-z_]+ [A-Za-z0-9_]*
+    Switch, // switch
 
     // built-in data types
     Void,   // void
@@ -134,8 +135,87 @@ enum class Token {
 
     // Special tokens
     Error,
+    Unknown,
     Eof,
     Comment,
-    Id,
     Count
+};
+
+struct Token {
+    TokenType                                                      type;
+    std::variant< std::monostate, std::string, double, long long > literal;
+    std::string_view                                               lexeme;
+    int                                                            position;
+    int                                                            line;
+    int                                                            column;
+};
+
+inline const std::unordered_map< std::string, TokenType > keywords = {
+    { "auto", TokenType::Auto },         { "break", TokenType::Break },
+    { "case", TokenType::Case },         { "char", TokenType::Char },
+    { "const", TokenType::Const },       { "continue", TokenType::Continue },
+    { "default", TokenType::Default },   { "do", TokenType::Do },
+    { "double", TokenType::Double },     { "else", TokenType::Else },
+    { "enum", TokenType::Enum },         { "extern", TokenType::Extern },
+    { "float", TokenType::Float },       { "for", TokenType::For },
+    { "goto", TokenType::Goto },         { "if", TokenType::If },
+    { "int", TokenType::Int },           { "long", TokenType::Long },
+    { "register", TokenType::Register }, { "return", TokenType::Return },
+    { "short", TokenType::Short },       { "signed", TokenType::Signed },
+    { "sizeof", TokenType::Sizeof },     { "static", TokenType::Static },
+    { "struct", TokenType::Struct },     { "switch", TokenType::Switch },
+    { "typedef", TokenType::Typedef },   { "union", TokenType::Union },
+    { "unsigned", TokenType::Unsigned }, { "void", TokenType::Void },
+    { "volatile", TokenType::Volatile }, { "while", TokenType::While },
+};
+
+inline const std::unordered_map< std::string, TokenType > operators = {
+
+    { "...", TokenType::Ellipsis },
+    { ">>=", TokenType::BitwiseShiftRightAssignment },
+    { "<<=", TokenType::BitwiseShiftLeftAssignment },
+    { "+=", TokenType::AddAssignment },
+    { "-=", TokenType::SubtractAssignment },
+    { "*=", TokenType::MultiplyAssignment },
+    { "/=", TokenType::DivideAssignment },
+    { "%=", TokenType::RemainderAssignment },
+    { "&=", TokenType::BitwiseAndAssignment },
+    { "^=", TokenType::BitwiseXorAssignment },
+    { "|=", TokenType::BitwiseOrAssignment },
+    { ">>", TokenType::BitwiseShiftLeft },
+    { "<<", TokenType::BitwiseShiftRight },
+    { "++", TokenType::Increment },
+    { "--", TokenType::Decrement },
+    { "->", TokenType::Arrow },
+    { "&&", TokenType::LogicalAnd },
+    { "||", TokenType::LogicalOr },
+    { "<=", TokenType::LessEqual },
+    { ">=", TokenType::GreaterEqual },
+    { "==", TokenType::Equal },
+    { "!=", TokenType::NotEqual },
+    { ";", TokenType::Semicolon },
+    { "{", TokenType::OpenCurlyBrace },
+    { "}", TokenType::CloseCurlyBrace },
+    { ",", TokenType::Comma },
+    { ":", TokenType::Colon },
+    { "=", TokenType::Assignment },
+    { "(", TokenType::OpenParenthesis },
+    { ")", TokenType::CloseParenthesis },
+    { "[", TokenType::OpenSquareBracket },
+    { "]", TokenType::CloseSquareBracket },
+    { ".", TokenType::Dot },
+    { "&", TokenType::BitwiseAnd },
+    { "!", TokenType::Not },
+    { "~", TokenType::Invert },
+    { "-", TokenType::Subtract },
+    { "+", TokenType::Add },
+    { "*", TokenType::Multiply },
+    { "/", TokenType::Divide },
+    { "%", TokenType::Remainder },
+    { "<", TokenType::Less },
+    { ">", TokenType::Greater },
+    { "^", TokenType::BitwiseXor },
+    { "|", TokenType::BitwiseOr },
+    { "?", TokenType::Question },
+
 };
