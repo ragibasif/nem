@@ -32,17 +32,19 @@ class Lexer {
     unsigned int     line     = 1;
     unsigned int     column   = 1;
 
-    static bool is_alpha( const char c ) {
+    [[nodiscard]] static bool is_alpha( const char c ) {
         return ( c >= 'a' && c <= 'z' ) || ( c >= 'A' && c <= 'Z' ) || c == '_';
     }
 
-    static bool is_alnum( const char c ) {
+    [[nodiscard]] static bool is_alnum( const char c ) {
         return is_alpha( c ) || is_digit( c );
     }
 
-    static bool is_digit( const char c ) { return c >= '0' && c <= '9'; }
+    [[nodiscard]] static bool is_digit( const char c ) {
+        return c >= '0' && c <= '9';
+    }
 
-    bool end() const { return current >= source.size(); }
+    [[nodiscard]] bool end() const { return current >= source.size(); }
 
     char next() {
         char c = source[current];
@@ -52,25 +54,25 @@ class Lexer {
         return c;
     }
 
-    char peek() {
+    [[nodiscard]] char peek() const {
         if ( end() ) { return '\0'; }
         return source[current];
     }
 
-    char peek_next() {
+    [[nodiscard]] char peek_next() const {
         if ( end() || ( current + 1 >= source.size() ) ) { return '\0'; }
         return source[current + 1];
     }
 
-    bool match( char expected ) {
+    [[nodiscard]] bool match( const char expected ) {
         if ( end() || source[current] != expected ) { return false; }
         current++;
         column++;
         return true;
     }
 
-    Token make_token( TokenType type ) {
-        std::string_view lexeme = source.substr( start, current - start );
+    Token make_token( TokenType type ) const {
+        auto lexeme = source.substr( start, current - start );
         return Token{ type, std::monostate{}, lexeme, position, line, column };
     }
 
@@ -265,7 +267,7 @@ class Lexer {
             }
 
             default: {
-                return make_token( TokenType::Unknown );
+                return make_token( TokenType::Error );
             }
         }
     }
@@ -434,9 +436,152 @@ class Lexer {
                       column };
     }
 
-    Token number() { return Token{}; }    // TODO
-    Token string() { return Token{}; }    // TODO
-    Token character() { return Token{}; } // TODO
+    Token number() {
+        bool floating = false;
+
+        while ( is_digit( peek() ) ) { next(); }
+
+        // floating point number
+        if ( peek() == '.' && is_digit( peek_next() ) ) {
+            floating = true;
+            next();
+            while ( is_digit( peek() ) ) { next(); }
+        }
+
+        auto lexeme = source.substr( start, current - start );
+
+        if ( floating ) {
+            auto literal = std::stod( std::string( lexeme ) );
+            return Token{
+                TokenType::Floating, literal, lexeme, position, line, column };
+        } else {
+            auto literal = std::stoll( std::string( lexeme ) );
+            return Token{ TokenType::Integer, literal, lexeme,
+                          position,           line,    column };
+        }
+    }
+
+    Token string() {
+        std::string literal;
+        while ( peek() != '"' && !end() ) {
+            if ( peek() == '\n' ) {
+                line++;
+                column = 1;
+            }
+
+            if ( peek() == '\\' ) {
+                next();
+                switch ( peek() ) {
+                    case 'n': {
+                        literal += '\n';
+                        break;
+                    }
+
+                    case 't': {
+                        literal += '\t';
+                        break;
+                    }
+                    case 'r': {
+                        literal += '\r';
+                        break;
+                    }
+                    case '\\': {
+                        literal += '\\';
+                        break;
+                    }
+                    case '"': {
+                        literal += '"';
+                        break;
+                    }
+
+                    default: {
+                        literal += peek();
+                        break;
+                    }
+                }
+            } else {
+                literal += peek();
+            }
+            next();
+        }
+        if ( end() ) {
+            return Token{ TokenType::Error,
+                          "Unterminated string literal",
+                          "",
+                          position,
+                          line,
+                          column };
+        }
+
+        next();
+
+        auto lexeme = source.substr( start, current - start );
+        return Token{ TokenType::String, literal, lexeme,
+                      position,          line,    column };
+    }
+
+    Token character() {
+        char literal = 0;
+
+        if ( end() ) {
+            return Token{ TokenType::Error,
+                          "Unterminated character literal",
+                          "",
+                          position,
+                          line,
+                          column };
+        }
+
+        if ( peek() == '\'' ) {
+            return Token{ TokenType::Error,
+                          "Empty character literal",
+                          "",
+                          position,
+                          line,
+                          column };
+        }
+
+        if ( peek() == '\\' ) {
+            next(); // consume '\'
+            char escape = next();
+            switch ( escape ) {
+                case 'n': literal = '\n'; break;
+                case 't': literal = '\t'; break;
+                case 'r': literal = '\r'; break;
+                case '0': literal = '\0'; break;
+                case '\\': literal = '\\'; break;
+                case '\'': literal = '\''; break;
+                case '\"': literal = '\"'; break;
+                default:
+                    return Token{ TokenType::Error,
+                                  "Unknown escape sequence",
+                                  "",
+                                  position,
+                                  line,
+                                  column };
+            }
+        } else {
+            literal = next();
+        }
+
+        if ( !match( '\'' ) ) {
+            return Token{ TokenType::Error,
+                          "Unterminated character literal",
+                          "",
+                          position,
+                          line,
+                          column };
+        }
+
+        auto lexeme = source.substr( start, current - start );
+
+        return Token{ TokenType::Character,
+                      static_cast< long long >( literal ),
+                      lexeme,
+                      position,
+                      line,
+                      column };
+    }
 
     Token scan() {
         skip();

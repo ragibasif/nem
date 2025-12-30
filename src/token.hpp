@@ -6,9 +6,8 @@
 enum class TokenType {
     // Literals
     Identifier, // main, [A-Za-z_]+ [A-Za-z0-9_]*
-    Number,     // 12345
-    Double,     // double
-    Float,      // float
+    Integer,    // 12345
+    Floating,   // 2.34
     Character,  // 'a'
     String,     // "abc"
     Constant,
@@ -84,10 +83,9 @@ enum class TokenType {
     Case,     // case
     Const,    // const
     Continue, // continue
-    Print,
-    True,  // true
-    False, // false
-
+    Bool,     // bool
+    True,     // true
+    False,    // false
     Default,  // default
     Do,       // do
     Else,     // else
@@ -96,6 +94,8 @@ enum class TokenType {
     Extern,   // extern
     Int,      // int
     Char,     // char
+    Double,   // double
+    Float,    // float
     Long,     // long
     Register, // register
     Short,    // short
@@ -106,6 +106,7 @@ enum class TokenType {
     Undef,    // undef
     Union,    // union
     Unsigned, // unsigned
+    Void,     // void
     Volatile, // volatile
     While,    // while
 
@@ -119,8 +120,6 @@ enum class TokenType {
     Switch, // switch
 
     // built-in data types
-    Void,   // void
-    Bool,   // bool
     Int8,   // char
     Uint8,  // unsigned char
     Int16,  // short
@@ -133,8 +132,8 @@ enum class TokenType {
     Flt64,  // double (64 bits)
 
     // Special tokens
-    Error,
     Unknown,
+    Error,
     Eof,
     Comment,
     Count
