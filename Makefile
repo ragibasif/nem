@@ -1,5 +1,4 @@
 SRC_DIR := src
-SRC_EXT := cpp
 BUILD_DIR := build
 CC := clang++
 CXXFLAGS := -std=c++20 \
@@ -12,14 +11,15 @@ CXXFLAGS := -std=c++20 \
 		  -fno-omit-frame-pointer -fno-optimize-sibling-calls \
 		  -fstack-protector-all -Wstack-protector \
 		  -MMD -MP \
+		  -stdlib=libc++ \
 		  -g3 -O0 -DDEBUG=1 -D_GLIBCXX_DEBUG \
 		  -DTEST=1
 
 LDFLAGS := # -lm  -I some/path/to/library
 
 
-SRCS := $(wildcard $(SRC_DIR)/*.$(SRC_EXT))
-OBJS := $(patsubst $(SRC_DIR)/%.$(SRC_EXT), $(BUILD_DIR)/%.o, $(SRCS))
+SRCS := $(wildcard $(SRC_DIR)/*.cpp)
+OBJS := $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRCS))
 
 TARGET := $(BUILD_DIR)/nem
 
@@ -32,12 +32,12 @@ all: $(TARGET)
 $(TARGET): $(OBJS)
 	$(CC) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.$(SRC_EXT)
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	mkdir -p $(BUILD_DIR)
 	$(CC) $(CXXFLAGS) -c $< -o $@
 
 .PHONY: run
-run: $(TARGET)
+run:
 	@make clean
 	@make all
 	./$(TARGET)
