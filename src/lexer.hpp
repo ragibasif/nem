@@ -2,7 +2,7 @@
 
 #include "token.hpp"
 
-#include <iostream>
+#include <string>
 #include <vector>
 
 class Lexer {
@@ -70,8 +70,8 @@ class Lexer {
     }
 
     Token make_token( TokenType type ) {
-        std::string_view text = source.substr( start, current - start );
-        return Token{ type, std::monostate{}, text, position, line, column };
+        std::string_view lexeme = source.substr( start, current - start );
+        return Token{ type, std::monostate{}, lexeme, position, line, column };
     }
 
     // white space and comments
@@ -270,51 +270,192 @@ class Lexer {
         }
     }
 
-    TokenType keyword( int offset, int length, const char *rest,
-                       TokenType type ) {
-        std::string_view text = source.substr( start, current - start );
+    TokenType identifier_type() {
+        std::string_view lexeme = source.substr( start, current - start );
+        if ( lexeme.empty() ) return TokenType::Identifier;
 
-        // check length and remaining substring
-        if ( static_cast< int >( text.size() ) == offset + length &&
-             text.substr( static_cast< size_t >( offset ),
-                          static_cast< size_t >( length ) ) == rest ) {
-            return type;
+        switch ( lexeme[0] ) {
+            case 'a': {
+                if ( lexeme == "auto" ) { return TokenType::Auto; }
+                if ( lexeme == "asm" ) { return TokenType::Asm; }
+                break;
+            }
+
+            case 'b': {
+                if ( lexeme == "break" ) { return TokenType::Break; }
+                if ( lexeme == "bool" ) { return TokenType::Bool; }
+                break;
+            }
+
+            case 'c': {
+                if ( lexeme.length() > 1 ) {
+                    switch ( lexeme[1] ) {
+                        case 'a': {
+                            if ( lexeme == "case" ) { return TokenType::Case; }
+                            break;
+                        }
+                        case 'h': {
+                            if ( lexeme == "char" ) { return TokenType::Char; }
+                            break;
+                        }
+                        case 'o': {
+                            if ( lexeme == "const" ) {
+                                return TokenType::Const;
+                            }
+                            if ( lexeme == "continue" ) {
+                                return TokenType::Continue;
+                            }
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+
+            case 'd': {
+                if ( lexeme == "default" ) { return TokenType::Default; }
+                if ( lexeme == "do" ) { return TokenType::Do; }
+                if ( lexeme == "double" ) { return TokenType::Double; }
+                break;
+            }
+
+            case 'e': {
+                if ( lexeme == "else" ) { return TokenType::Else; }
+                if ( lexeme == "enum" ) { return TokenType::Enum; }
+                if ( lexeme == "extern" ) { return TokenType::Extern; }
+                break;
+            }
+
+            case 'f': {
+                if ( lexeme == "for" ) { return TokenType::For; }
+                if ( lexeme == "float" ) { return TokenType::Float; }
+                if ( lexeme == "false" ) { return TokenType::False; }
+                break;
+            }
+
+            case 'g': {
+                if ( lexeme == "goto" ) { return TokenType::Goto; }
+                break;
+            }
+
+            case 'i': {
+                if ( lexeme == "if" ) { return TokenType::If; }
+                if ( lexeme == "int" ) { return TokenType::Int; }
+                if ( lexeme == "import" ) { return TokenType::Import; }
+                break;
+            }
+
+            case 'l': {
+                if ( lexeme == "long" ) { return TokenType::Long; }
+                break;
+            }
+
+            case 'r': {
+                if ( lexeme == "return" ) { return TokenType::Return; }
+                if ( lexeme == "register" ) { return TokenType::Register; }
+                break;
+            }
+
+            case 's': {
+                if ( lexeme.length() > 1 ) {
+                    switch ( lexeme[1] ) {
+                        case 'h': {
+                            if ( lexeme == "short" ) {
+                                return TokenType::Short;
+                            }
+                            break;
+                        }
+
+                        case 'i': {
+                            if ( lexeme == "sizeof" ) {
+                                return TokenType::Sizeof;
+                            }
+                            if ( lexeme == "signed" ) {
+                                return TokenType::Signed;
+                            }
+                            break;
+                        }
+
+                        case 't': {
+                            if ( lexeme == "static" ) {
+                                return TokenType::Static;
+                            }
+                            if ( lexeme == "struct" ) {
+                                return TokenType::Struct;
+                            }
+                            break;
+                        }
+
+                        case 'w': {
+                            if ( lexeme == "switch" ) {
+                                return TokenType::Switch;
+                            }
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+
+            case 't': {
+                if ( lexeme == "typedef" ) { return TokenType::Typedef; }
+                if ( lexeme == "true" ) { return TokenType::True; }
+                break;
+            }
+
+            case 'u': {
+                if ( lexeme == "unsigned" ) { return TokenType::Unsigned; }
+                if ( lexeme == "union" ) { return TokenType::Union; }
+                break;
+            }
+
+            case 'v': {
+                if ( lexeme == "void" ) { return TokenType::Void; }
+                if ( lexeme == "volatile" ) { return TokenType::Volatile; }
+                break;
+            }
+
+            case 'w': {
+                if ( lexeme == "while" ) { return TokenType::While; }
+                break;
+            }
         }
+
         return TokenType::Identifier;
     }
 
-    void identifier() {}
-    void number() {}
-    void string() {}
+    Token identifier() {
+        while ( is_alnum( peek() ) ) { next(); }
+
+        TokenType        type   = identifier_type();
+        std::string_view lexeme = source.substr( start, current - start );
+
+        return Token{ type,  std::string( lexeme ), lexeme, position, line,
+                      column };
+    }
+
+    Token number() { return Token{}; }    // TODO
+    Token string() { return Token{}; }    // TODO
+    Token character() { return Token{}; } // TODO
 
     Token scan() {
         skip();
         start = current;
 
+        if ( end() ) { return make_token( TokenType::Eof ); }
+
         const char c = next();
 
-        if ( is_alpha( c ) ) {}
-        if ( is_digit( c ) ) {}
-
-        return operators( c );
+        if ( is_alpha( c ) ) {
+            return identifier();
+        } else if ( is_digit( c ) ) {
+            return number();
+        } else if ( c == '"' ) {
+            return string();
+        } else if ( c == '\'' ) {
+            return character();
+        } else {
+            return operators( c );
+        }
     }
 };
-
-// const std::unordered_map< std::string, TokenType > keywords = {
-//     { "auto", TokenType::Auto },         { "break", TokenType::Break },
-//     { "case", TokenType::Case },         { "char", TokenType::Char },
-//     { "const", TokenType::Const },       { "continue", TokenType::Continue },
-//     { "default", TokenType::Default },   { "do", TokenType::Do },
-//     { "double", TokenType::Double },     { "else", TokenType::Else },
-//     { "enum", TokenType::Enum },         { "extern", TokenType::Extern },
-//     { "float", TokenType::Float },       { "for", TokenType::For },
-//     { "goto", TokenType::Goto },         { "if", TokenType::If },
-//     { "int", TokenType::Int },           { "long", TokenType::Long },
-//     { "register", TokenType::Register }, { "return", TokenType::Return },
-//     { "short", TokenType::Short },       { "signed", TokenType::Signed },
-//     { "sizeof", TokenType::Sizeof },     { "static", TokenType::Static },
-//     { "struct", TokenType::Struct },     { "switch", TokenType::Switch },
-//     { "typedef", TokenType::Typedef },   { "union", TokenType::Union },
-//     { "unsigned", TokenType::Unsigned }, { "void", TokenType::Void },
-//     { "volatile", TokenType::Volatile }, { "while", TokenType::While },
-// };
