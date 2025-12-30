@@ -8,9 +8,9 @@
 #define TEST 0
 #endif
 
-#include "driver.hpp"
 #include "lexer.hpp"
 
+#include <chrono>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -36,8 +36,10 @@ int main( [[maybe_unused]] int argc, [[maybe_unused]] char **argv ) {
     auto wc_start  = std::chrono::high_resolution_clock::now();
     auto cpu_start = std::clock();
 
-    Lexer  lexer( read( "tests/main.c" ) );
-    Driver driver( "tests/main.c" );
+    std::string buffer = read( "tests/main.c" );
+    std::cerr << buffer;
+
+    Lexer lexer( buffer );
 
     auto   wc_end  = std::chrono::high_resolution_clock::now();
     auto   cpu_end = std::clock();
