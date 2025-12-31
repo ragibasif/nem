@@ -3,17 +3,14 @@
 #define DEBUG 0
 #endif
 
-// Test - disabled by default, can be enabled with -DTEST=1
-#ifndef TEST
-#define TEST 0
-#endif
-
-#include "lexer.hpp"
+#include "../src/lexer.hpp"
+#include "../src/token.hpp"
 
 #include <chrono>
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <vector>
 
 std::string read( std::string path ) {
     constexpr auto read_size = std::size_t( 4096 );
@@ -37,9 +34,13 @@ int main( [[maybe_unused]] int argc, [[maybe_unused]] char **argv ) {
     auto cpu_start = std::clock();
 
     std::string buffer = read( "tests/main.c" );
-    std::cerr << buffer;
 
-    Lexer lexer( buffer );
+    Lexer                lexer( buffer );
+    std::vector< Token > tokens = lexer.tokenize();
+    for ( const auto &t : tokens ) {
+        std::cout << "Line " << t.line << " | Type: " << (int)t.type
+                  << " | Lexeme: [" << t.lexeme << "]" << std::endl;
+    }
 
     auto   wc_end  = std::chrono::high_resolution_clock::now();
     auto   cpu_end = std::clock();

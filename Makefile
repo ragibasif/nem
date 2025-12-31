@@ -1,6 +1,4 @@
-SRC_DIR := src
-BUILD_DIR := build
-CC := clang++
+CXX := clang++
 CXXFLAGS := -std=c++20 \
 		  -pedantic -Wall -Wextra -Wvla -Wshadow \
 		  -Wno-unused-parameter -Wwrite-strings -Wstrict-prototypes \
@@ -11,38 +9,51 @@ CXXFLAGS := -std=c++20 \
 		  -fno-omit-frame-pointer -fno-optimize-sibling-calls \
 		  -fstack-protector-all -Wstack-protector \
 		  -MMD -MP \
-		  -stdlib=libc++ \
-		  -g3 -O0 -DDEBUG=1 -D_GLIBCXX_DEBUG \
-		  -DTEST=1
+		  -g3 -O0 -D_GLIBCXX_DEBUG \
+		  -DDEBUG=1
+LDFLAGS := -stdlib=libc++
 
-LDFLAGS := # -lm  -I some/path/to/library
+SRC_DIR := src
+OBJ_DIR := obj
+BIN_DIR := bin
 
+# exclude main.cpp from the lib so tests can have their own main
+SRCS     := $(wildcard $(SRC_DIR)/*.cpp)
+OBJS     := $(SRCS:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
-SRCS := $(wildcard $(SRC_DIR)/*.cpp)
-OBJS := $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRCS))
-
-TARGET := $(BUILD_DIR)/nem
+# Targets
+MAIN_BIN := $(BIN_DIR)/nem
+TEST_BIN := $(BIN_DIR)/nem_tests
 
 .PHONY: default
 default: all
 
 .PHONY: all
-all: $(TARGET)
+all: $(MAIN_BIN)
 
-$(TARGET): $(OBJS)
-	$(CC) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+$(MAIN_BIN): main.cpp $(OBJS)
+	@mkdir -p $(BIN_DIR)
+	@$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
-	mkdir -p $(BUILD_DIR)
-	$(CC) $(CXXFLAGS) -c $< -o $@
+.PHONY: test
+test: $(TEST_BIN)
+	@./$(TEST_BIN)
+
+$(TEST_BIN): tests/main.cpp $(OBJS)
+	@mkdir -p $(BIN_DIR)
+	@$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@mkdir -p $(OBJ_DIR)
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .PHONY: run
 run:
 	@make clean
 	@make all
-	./$(TARGET)
+	@./$(MAIN_BIN)
 	@make clean
 
 .PHONY: clean
 clean:
-	@rm -rf $(BUILD_DIR)
+	@rm -rf $(OBJ_DIR) $(BIN_DIR)
