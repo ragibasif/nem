@@ -3,7 +3,7 @@
 import signal
 import atexit
 import sys
-from collections import deque, defaultdict, Counter
+from collections import Counter
 import time
 import inspect
 from functools import wraps
@@ -161,6 +161,19 @@ def trace(func):
     return wrapper
 
 
+def timer(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.perf_counter()
+        result = func(*args, **kwargs)
+        end = time.perf_counter()
+        duration = end - start
+        print(f"[{func.__name__}] {duration:.4f}s ({duration * 1000:.2f}ms)")
+        return result
+
+    return wrapper
+
+
 class ListNode:
     def __init__(self, val=0, next=None):
         self.val = val
@@ -186,6 +199,7 @@ class Lexer:
     def __init__(self, src: str):
         self.src = src
 
+    @timer
     def tokenize(self) -> list:
         buf = (
             self.src.replace("(", " ( ")
@@ -210,38 +224,35 @@ class Lexer:
 class Parser:
     def __init__(self, src: str):
         self.src = src
+        self.tokens = Lexer(self.src).tokenize()
+        self.root = TreeNode()
 
+    @timer
     def parse(self):
-        lexer = Lexer(self.src)
-        tokens = lexer.tokenize()
-        print(tokens)
+        print(self.tokens)
 
 
-def load(fileName: str) -> str:
-    with open(fileName, "r") as file:
-        contents = file.read()
-        return contents
-
-
+@timer
 def main():
     def handler(signum, frame):
-        raise Exception("TLE: Test took too long!")
+        raise Exception("Time Limit Exceeded (TLE)")
 
     signal.signal(signal.SIGALRM, handler)
 
     signal.alarm(2)  # Limit each test to 2 seconds
-    start = time.perf_counter()
+
+    def load(fileName: str) -> str:
+        with open(fileName, "r") as file:
+            contents = file.read()
+            return contents
 
     src = load("input.scm")
     p = Parser(src)
     p.parse()
 
-    end = time.perf_counter()
-    print(f"Time: {end - start} seconds", file=sys.stderr)
     signal.alarm(0)  # Reset
 
 
-atexit.register(sys.stdout.flush)
-
 if __name__ == "__main__":
+    atexit.register(sys.stdout.flush)
     main()
