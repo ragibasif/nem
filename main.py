@@ -2,19 +2,17 @@
 
 import signal
 import atexit
-import os
 import sys
-import math
-import heapq
 from collections import deque, defaultdict, Counter
-import string
 import time
-import itertools
 import inspect
-from functools import cache, wraps
+from functools import wraps
 
-class Dbg:
-    def __init__(self,*args):
+COMMENTS = ";;"
+
+
+class dbg:
+    def __init__(self, *args):
         frame = inspect.currentframe().f_back
         info = inspect.getframeinfo(frame)
         names = {id(v): k for k, v in frame.f_locals.items()}
@@ -41,8 +39,7 @@ class Dbg:
             else:
                 print(f"  {var}", file=sys.stderr)
 
-
-    def _hashmap(self,hashmap):
+    def _hashmap(self, hashmap):
         print(f"  {'KEY':<15} | {'VALUE'}", file=sys.stderr)
         print(f"  {'-' * 30}", file=sys.stderr)
         try:
@@ -52,8 +49,7 @@ class Dbg:
         for k, v in items:
             print(f"  {str(k):<15} | {v}", file=sys.stderr)
 
-
-    def _matrix(self,matrix):
+    def _matrix(self, matrix):
         if not matrix or not matrix[0]:
             print("  Empty {matrix}", file=sys.stderr)
             return
@@ -79,7 +75,7 @@ class Dbg:
             print(row_str, file=sys.stderr)
         print(" " * 4 + "+" + "-" * (C * width) + "\n", file=sys.stderr)
 
-    def _sll(self,head):
+    def _sll(self, head):
         res = []
         curr = head
         seen = set()
@@ -105,7 +101,7 @@ class Dbg:
         res = " -> ".join(res)
         print(f"  {res}", file=sys.stderr)
 
-    def _tree(self,root):
+    def _tree(self, root):
         lines = []
 
         def _build(node, prefix="", is_left=True, is_root=True):
@@ -119,7 +115,8 @@ class Dbg:
             if node.right or node.left:
                 _build(
                     node.right,
-                    prefix + ("  |       " if is_left and not is_root else "          "),
+                    prefix
+                    + ("  |       " if is_left and not is_root else "          "),
                     False,
                     False,
                 )
@@ -145,7 +142,6 @@ class Dbg:
         print("\n" + "\n".join(lines) + "\n")
 
 
-
 def trace(func):
     """Decorator to trace recursive functions."""
     level = 0
@@ -169,37 +165,63 @@ class ListNode:
     def __init__(self, val=0, next=None):
         self.val = val
         self.next = next
+
     def __repr__(self):
         return f"ListNode({self.val})"
+
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
         self.left = left
         self.right = right
+
     def __repr__(self):
         left_val = self.left.val if self.left else "null"
         right_val = self.right.val if self.right else "null"
         return f"TreeNode({self.val}, L:{left_val}, R:{right_val})"
 
+
 class Lexer:
-    def __init__(self,src:str):
+    def __init__(self, src: str):
         self.src = src
-    def tokenize(self)->list:
-        return self.src.replace('(', ' ( ').replace(')', ' ) ',).split()
+
+    def tokenize(self) -> list:
+        buf = (
+            self.src.replace("(", " ( ")
+            .replace(
+                ")",
+                " ) ",
+            )
+            .split()
+        )
+        while COMMENTS in buf:
+            idx = buf.index(COMMENTS)
+            while idx < len(buf) and buf[idx] != "(":
+                buf[idx] = None
+                idx += 1
+        res = []
+        for item in buf:
+            if item:
+                res.append(item)
+        return res
+
 
 class Parser:
-    def __init__(self,src:str):
+    def __init__(self, src: str):
         self.src = src
+
     def parse(self):
-        l = Lexer(self.src)
-        tokens = l.tokenize()
+        lexer = Lexer(self.src)
+        tokens = lexer.tokenize()
         print(tokens)
 
-def load(fileName:str)->str:
-    with open(fileName,"r") as file:
+
+def load(fileName: str) -> str:
+    with open(fileName, "r") as file:
         contents = file.read()
         return contents
+
 
 def main():
     def handler(signum, frame):
@@ -215,7 +237,7 @@ def main():
     p.parse()
 
     end = time.perf_counter()
-    print(f"Time: {end-start} seconds",file=sys.stderr)
+    print(f"Time: {end - start} seconds", file=sys.stderr)
     signal.alarm(0)  # Reset
 
 
