@@ -8,4 +8,43 @@ build:
 
 .PHONY: clean
 clean:
-	@rm -rf dist *.egg-info
+	@rm -rf dist *.egg-info .mypy_cache .ruff_cache .pytest_cache htmlcov .coverage
+
+# --- testing ---
+
+.PHONY: test
+test:
+	@uv run pytest
+
+.PHONY: cov
+cov:
+	@uv run pytest --cov=main --cov-report=term-missing
+
+.PHONY: cov-html
+cov-html:
+	@uv run pytest --cov=main --cov-report=html && open htmlcov/index.html
+
+# --- linting & formatting ---
+
+.PHONY: lint
+lint:
+	@uv run ruff check .
+
+.PHONY: fmt
+fmt:
+	@uv run ruff format .
+
+.PHONY: fix
+fix:
+	@uv run ruff check --fix .
+
+# --- type checking ---
+
+.PHONY: type
+type:
+	@uv run mypy main.py
+
+# --- all checks ---
+
+.PHONY: check
+check: lint type test

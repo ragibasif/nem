@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 
-import signal
-import atexit
 import sys
 from collections import Counter, deque
 import time
-import inspect
 from functools import wraps
 
 
@@ -117,7 +114,7 @@ class Parser:
 
 
 def test():
-    scheme_tests = [
+    tests = [
         # 1. Basic Arithmetic
         ("(+ 5 (* 2 3) (- 10 7))", 14),
         # 2. Variable Definition
@@ -131,24 +128,15 @@ def test():
         # 5. Lambda Functions
         ("((lambda (r) (* 3.14 (* r r))) 10)", 314.0),
     ]
-    for idx, (source, expected) in enumerate(scheme_tests):
+    for idx, (source, expected) in enumerate(tests):
         parsed = Parser(source).parse()
         print(idx, parsed, expected)
 
 
 def main():
-    def handler(signum, frame):
-        raise Exception("Time Limit Exceeded (TLE)")
-
-    signal.signal(signal.SIGALRM, handler)
-
-    signal.alarm(2)  # Limit each test to 2 seconds
-
     test()
 
-    signal.alarm(0)  # Reset
 
 
 if __name__ == "__main__":
-    atexit.register(sys.stdout.flush)
     main()
