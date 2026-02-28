@@ -1,6 +1,6 @@
 .PHONY: all
 all:
-	@uv run main.py
+	@uv run src/main.py
 
 .PHONY: build
 build:
@@ -18,11 +18,11 @@ test:
 
 .PHONY: cov
 cov:
-	@uv run pytest --cov=main --cov-report=term-missing
+	@uv run pytest --cov=src/main --cov-report=term-missing
 
 .PHONY: cov-html
 cov-html:
-	@uv run pytest --cov=main --cov-report=html && open htmlcov/index.html
+	@uv run pytest --cov=src/main --cov-report=html && open htmlcov/index.html
 
 # --- linting & formatting ---
 
@@ -42,7 +42,7 @@ fix:
 
 .PHONY: type
 type:
-	@uv run mypy main.py
+	@uv run mypy src/main.py
 
 # --- all checks ---
 
